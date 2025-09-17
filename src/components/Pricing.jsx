@@ -5,49 +5,53 @@ import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card.
 const Pricing = () => {
   const plans = [
     {
-      name: "Starter",
-      price: "Free",
-      description: "Perfect for small businesses starting their fintech journey",
+      name: "Campus Starter",
+      price: "$499",
+      period: "per month",
+      description: "Perfect for small to medium colleges with basic multilingual support",
       features: [
-        "Up to 100 transactions/month",
-        "Basic payment processing",
-        "Standard reporting",
+        "Up to 5,000 conversations/month",
+        "3 regional languages + English",
+        "Voice & text support",
+        "Basic analytics dashboard",
         "Email support",
-        "Basic fraud protection"
+        "Standard privacy compliance"
       ],
-      buttonText: "Get Started",
+      buttonText: "Schedule Demo",
       buttonVariant: "outline",
       popular: false
     },
     {
-      name: "Professional",
-      price: "$99",
+      name: "University Pro",
+      price: "$1,299",
       period: "per month",
-      description: "Ideal for growing businesses with higher transaction volumes",
+      description: "Ideal for large universities with comprehensive multilingual support",
       features: [
-        "Up to 10,000 transactions/month",
-        "Advanced payment processing",
-        "Real-time analytics",
-        "Multi-currency support",
-        "Advanced fraud protection",
-        "API access",
-        "Priority support"
+        "Up to 25,000 conversations/month",
+        "5+ regional languages + English",
+        "Advanced voice & text AI",
+        "Real-time analytics & reporting",
+        "Custom FAQ management",
+        "WhatsApp & web integration",
+        "Priority support",
+        "Advanced compliance tools"
       ],
-      buttonText: "Start 14-day trial",
+      buttonText: "Start Free Trial",
       buttonVariant: "default",
       popular: true
     },
     {
-      name: "Enterprise",
+      name: "Enterprise Campus",
       price: "Custom",
-      description: "For large organizations with complex financial operations",
+      description: "For university systems and large educational networks",
       features: [
-        "Unlimited transactions",
-        "Custom payment workflows",
-        "Advanced compliance tools",
-        "Dedicated infrastructure",
+        "Unlimited conversations",
+        "All supported languages",
+        "Custom AI model training",
+        "Multi-institution dashboard",
+        "Advanced integrations (ERP, LMS)",
         "White-label solutions",
-        "Dedicated account manager",
+        "Dedicated success manager",
         "24/7 premium support"
       ],
       buttonText: "Contact Sales",
@@ -61,10 +65,10 @@ const Pricing = () => {
       <div className="max-w-7xl mx-auto space-y-16">
         <div className="text-center space-y-4 max-w-3xl mx-auto">
           <h2 className="text-3xl md:text-4xl font-medium tracking-tighter text-foreground">
-            Transparent pricing for every stage
+            B2B Pricing for Educational Institutions
           </h2>
           <p className="text-muted-foreground text-lg">
-            Scale your financial operations with plans that grow with your business
+            Scale your student and parent support with plans tailored to your institution's size and language needs
           </p>
         </div>
 

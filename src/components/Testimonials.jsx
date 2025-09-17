@@ -3,22 +3,22 @@ import React from 'react';
 const Testimonials = () => {
   const testimonials = [
     {
-      quote: "Our payment processing efficiency increased by 40% and transaction failures dropped to near zero. The automation features are game-changing.",
-      author: "Sarah Johnson",
-      position: "CFO at TechCorp",
-      avatar: "bg-cosmic-light/30"
+      quote: "The AI voice agent has transformed how we handle parent inquiries. Response times dropped from days to minutes, and parents can now get answers in their preferred language 24/7.",
+      author: "Dr. Priya Sharma",
+      position: "Director of Student Services at Delhi University",
+      avatar: "bg-primary/30"
     },
     {
-      quote: "The real-time analytics and fraud detection capabilities have saved us millions. We can spot issues before they become problems.",
-      author: "Michael Chen",
-      position: "Head of Risk at FinanceFlow",
-      avatar: "bg-cosmic-light/20"
+      quote: "Our multilingual support has improved parent satisfaction by 85%. The AI handles routine queries perfectly, allowing our staff to focus on complex student cases.",
+      author: "Prof. Rajesh Kumar",
+      position: "Dean of Admissions at IIT Madras",
+      avatar: "bg-primary/20"
     },
     {
-      quote: "Compliance used to be a nightmare. Now our regulatory reporting is automated and we're always audit-ready.",
-      author: "Leila Rodriguez",
-      position: "Operations Director at GlobalPay",
-      avatar: "bg-cosmic-light/40"
+      quote: "Implementation was seamless and the ROI was immediate. We've reduced our administrative workload significantly while providing better service to our diverse community.",
+      author: "Ms. Lakshmi Venkatesh",
+      position: "IT Director at Anna University",
+      avatar: "bg-primary/40"
     }
   ];
 
@@ -30,10 +30,10 @@ const Testimonials = () => {
       <div className="max-w-7xl mx-auto space-y-16 relative z-10">
         <div className="text-center space-y-4 max-w-3xl mx-auto">
           <h2 className="text-3xl md:text-4xl font-medium tracking-tighter text-foreground">
-            Trusted by finance teams worldwide
+            Trusted by Leading Educational Institutions
           </h2>
           <p className="text-muted-foreground text-lg">
-            See how our platform transforms financial operations for businesses
+            See how our AI voice agent is transforming student and parent support across universities and colleges
           </p>
         </div>
 

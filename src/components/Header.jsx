@@ -134,7 +134,7 @@ const Header = () => {
           </div>
           <div className="rounded-2xl">
             <Button variant="ghost" className="text-muted-foreground hover:text-foreground hover:bg-muted">
-              Get Started
+              Request Demo
             </Button>
           </div>
         </div>
