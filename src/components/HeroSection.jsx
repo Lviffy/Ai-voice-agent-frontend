@@ -14,16 +14,16 @@ const HeroSection = () => {
   }, []);
 
   return (
-    <section className="relative w-full h-screen -mt-16 pt-16 flex flex-col items-center justify-start overflow-hidden bg-background">
+     <section id="home" className="relative w-full h-screen -mt-16 pt-16 flex flex-col items-center justify-start overflow-hidden bg-background">
       {/* Cosmic particle effect (background dots) */}
-      <div className="absolute inset-0 cosmic-grid opacity-30"></div>
+      <div className="absolute top-0 left-0 w-full h-full cosmic-grid opacity-30 z-0"></div>
 
       {/* Gradient glow effect */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/3 w-[600px] h-[600px] rounded-full">
         <div className="w-full h-full opacity-10 bg-primary blur-[120px]"></div>
       </div>
 
-      <div className="flex-1 flex items-center justify-center pt-12">
+      <div className="flex-1 flex items-center justify-center pt-8 -mt-10">
       <div className={`relative z-10 max-w-5xl mx-auto px-6 md:px-12 text-center space-y-8 transition-all duration-700 transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
         <div className="flex justify-center mb-6">
           <span className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-full bg-muted text-primary">
@@ -47,7 +47,7 @@ const HeroSection = () => {
             Request a Demo
           </Button>
           <Button variant="outline" className="border-border text-foreground hover:bg-accent hover:text-accent-foreground text-base h-12 px-8 transition-all duration-200 min-h-[48px]">
-            Contact Sales
+            Start Now
           </Button>
         </div>
 
