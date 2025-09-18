@@ -4,12 +4,15 @@ import { Button } from './ui/button';
 import { BarChart3, MessageSquare, Clock, Heart, AlertTriangle, Paperclip, Brain, Play, Users, Settings, BookOpen, HelpCircle, LogOut, Menu, X, Phone } from 'lucide-react';
 import ConversationLogs from './ConversationLogs';
 import FAQManagement from './FAQManagement';
+import UserManagement from './UserManagement';
+import { TaskBoard } from './TaskBoard';
 import Logo from './Logo';
 import { useTheme } from '../contexts/ThemeContext';
 
 const Dashboard = ({ onLogout }) => {
   const [activeSection, setActiveSection] = useState('analytics');
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [selectedUser, setSelectedUser] = useState(null);
   const { isDarkMode, toggleTheme } = useTheme();
 
   // Sample data matching the image
@@ -251,6 +254,16 @@ const Dashboard = ({ onLogout }) => {
     </div>
   );
 
+  const handleOpenKanban = (user) => {
+    setSelectedUser(user);
+    setActiveSection('kanban');
+  };
+
+  const handleBackFromKanban = () => {
+    setSelectedUser(null);
+    setActiveSection('users');
+  };
+
   const renderSectionContent = () => {
     switch (activeSection) {
       case 'analytics':
@@ -260,14 +273,9 @@ const Dashboard = ({ onLogout }) => {
       case 'faq':
         return <FAQManagement />;
       case 'users':
-        return (
-          <div className="space-y-6">
-            <h2 className="text-2xl font-bold text-foreground">User Management</h2>
-            <Card className="p-6 bg-card border-border">
-              <p className="text-muted-foreground">Manage user accounts, permissions, and access levels.</p>
-            </Card>
-          </div>
-        );
+        return <UserManagement onOpenKanban={handleOpenKanban} />;
+      case 'kanban':
+        return <TaskBoard userId={selectedUser?.id?.toString()} onBack={handleBackFromKanban} />;
       case 'settings':
         return (
           <div className="space-y-6">
@@ -372,7 +380,9 @@ const Dashboard = ({ onLogout }) => {
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
               <h1 className="text-xl font-semibold text-foreground capitalize">
-                {activeSection === 'faq' ? 'FAQ Management' : activeSection}
+                {activeSection === 'faq' ? 'FAQ Management' : 
+                 activeSection === 'kanban' ? `Task Board - ${selectedUser?.name}` : 
+                 activeSection}
               </h1>
             </div>
             <div className="flex items-center space-x-3">
@@ -392,7 +402,7 @@ const Dashboard = ({ onLogout }) => {
         </div>
 
         {/* Content Area */}
-        <div className="p-8">
+        <div className={activeSection === 'kanban' ? '' : 'p-8'}>
           {renderSectionContent()}
         </div>
       </div>

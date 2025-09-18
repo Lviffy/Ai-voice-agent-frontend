@@ -29,6 +29,9 @@ export default {
 					accent: '#606060', /* Medium-dark grey accent */
 					muted: '#909090', /* Medium grey */
 				},
+				gray: {
+					750: '#374151', /* Custom gray-750 for cards */
+				},
 				primary: {
 					DEFAULT: 'hsl(var(--primary))',
 					foreground: 'hsl(var(--primary-foreground))'

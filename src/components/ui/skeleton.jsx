@@ -1,15 +1,15 @@
 import { cn } from "@/lib/utils.js"
 
-function Skeleton({
-  className,
-  ...props
-}) {
-  return (
-    <div
-      className={cn("animate-pulse rounded-md bg-muted", className)}
-      {...props}
-    />
-  )
-}
+import React from 'react';
 
-export { Skeleton }
+/**
+ * Skeleton component for loading states
+ * @param {Object} props
+ * @param {string} [props.className] - Additional CSS classes
+ * @returns {JSX.Element}
+ */
+export const Skeleton = ({ className = "" }) => {
+  return (
+    <div className={`animate-pulse bg-muted rounded ${className}`} />
+  );
+};

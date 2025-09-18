@@ -1,4 +1,63 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+
+const initialColumns = [
+  {
+    id: 'todo',
+    title: 'To Do',
+    tasks: [
+      {
+        id: '1',
+        title: 'Design landing page',
+        description: 'Create wireframes and mockups for the landing page',
+        status: 'todo',
+      },
+      {
+        id: '2',
+        title: 'Set up project structure',
+        description: 'Initialize the project with proper folder structure',
+        status: 'todo',
+      },
+    ],
+  },
+  {
+    id: 'in-progress',
+    title: 'In Progress',
+    tasks: [
+      {
+        id: '3',
+        title: 'Implement authentication',
+        description: 'Add user login and registration functionality',
+        status: 'in-progress',
+      },
+    ],
+  },
+  {
+    id: 'review',
+    title: 'Review',
+    tasks: [
+      {
+        id: '4',
+        title: 'Code review',
+        description: 'Review pull requests and provide feedback',
+        status: 'review',
+      },
+    ],
+  },
+  {
+    id: 'done',
+    title: 'Done',
+    tasks: [
+      {
+        id: '5',
+        title: 'Setup CI/CD pipeline',
+        description: 'Configure automated testing and deployment',
+        status: 'done',
+      },
+    ],
+  },
+];
+
+export import { useState, useEffect } from 'react';
 
 /**
  * Custom hook for managing task board state and drag-drop operations
@@ -20,10 +79,9 @@ export const useTaskBoard = (userId = null) => {
         const mockTasks = [
           {
             id: '1',
-            title: 'Design new landing page',
-            description: 'Create a modern and responsive landing page for the product',
+            title: 'Setup Voice Agent Configuration',
+            description: 'Configure voice agent settings for new user onboarding',
             status: 'todo',
-            category: 'Design',
             priority: 'high',
             assignee: 'rahul',
             due_date: '2025-09-25',
@@ -33,10 +91,9 @@ export const useTaskBoard = (userId = null) => {
           },
           {
             id: '2',
-            title: 'Implement user authentication',
-            description: 'Set up login and registration system',
+            title: 'Review Call Transcripts',
+            description: 'Analyze conversation quality and identify improvement areas',
             status: 'in-progress',
-            category: 'Development',
             priority: 'medium',
             assignee: 'priya',
             due_date: '2025-09-30',
@@ -46,10 +103,9 @@ export const useTaskBoard = (userId = null) => {
           },
           {
             id: '3',
-            title: 'Write API documentation',
-            description: 'Document all API endpoints with examples',
-            status: 'completed',
-            category: 'Documentation',
+            title: 'Update FAQ Database',
+            description: 'Add new frequently asked questions from recent calls',
+            status: 'in-review',
             priority: 'low',
             assignee: 'amit',
             due_date: '2025-10-05',
@@ -59,10 +115,9 @@ export const useTaskBoard = (userId = null) => {
           },
           {
             id: '4',
-            title: 'Setup development environment',
-            description: 'Configure local development setup for new team members',
-            status: 'todo',
-            category: 'Development',
+            title: 'Generate Monthly Report',
+            description: 'Compile voice agent performance metrics for September',
+            status: 'completed',
             priority: 'medium',
             assignee: 'sunita',
             due_date: '2025-09-20',
@@ -72,10 +127,9 @@ export const useTaskBoard = (userId = null) => {
           },
           {
             id: '5',
-            title: 'Review wireframes',
-            description: 'Review and approve new wireframes for user dashboard',
-            status: 'in-review',
-            category: 'Design',
+            title: 'Optimize Response Times',
+            description: 'Improve AI response latency for better user experience',
+            status: 'todo',
             priority: 'high',
             assignee: 'arjun',
             due_date: '2025-09-28',
@@ -85,10 +139,9 @@ export const useTaskBoard = (userId = null) => {
           },
           {
             id: '6',
-            title: 'Database optimization',
-            description: 'Optimize database queries for better performance',
+            title: 'Train Voice Model',
+            description: 'Retrain voice recognition for better accent handling',
             status: 'in-progress',
-            category: 'Development',
             priority: 'high',
             assignee: 'rahul',
             due_date: '2025-10-01',
