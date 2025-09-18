@@ -7,7 +7,7 @@ import { Label } from '@/components/ui/label'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Eye, EyeOff, Mail, Lock, Loader2, ArrowLeft } from 'lucide-react'
 
-const Login = ({ onBackToHome, onSwitchToSignUp }) => {
+const Login = ({ onBackToHome, onSwitchToSignUp, onLogin }) => {
   const [showPassword, setShowPassword] = React.useState(false)
   const [isLoading, setIsLoading] = React.useState(false)
 
@@ -25,7 +25,9 @@ const Login = ({ onBackToHome, onSwitchToSignUp }) => {
       console.log('Login data:', data)
       // Here you would typically make an API call to authenticate
       await new Promise(resolve => setTimeout(resolve, 2000))
-      alert('Login successful!')
+      
+      // Call the login handler passed from parent
+      onLogin(data)
     } catch (error) {
       console.error('Login error:', error)
     } finally {

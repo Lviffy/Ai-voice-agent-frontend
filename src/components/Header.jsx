@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button.jsx';
 import Logo from './Logo.jsx';
-import { Menu, X, CircleDot, DollarSign, Sun, Moon } from 'lucide-react';
+import { Menu, X, CircleDot, IndianRupee, Sun, Moon } from 'lucide-react';
 import { cn } from '@/lib/utils.js';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group.jsx';
 import { Switch } from '@/components/ui/switch.jsx';
 import { useTheme } from '../contexts/ThemeContext.jsx';
 
-const Header = ({ onLoginClick, onSignUpClick }) => {
+const Header = ({ onLoginClick }) => {
   const [activePage, setActivePage] = useState('home');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { isDarkMode, toggleTheme } = useTheme();
@@ -116,7 +116,7 @@ const Header = ({ onLoginClick, onSignUpClick }) => {
                 )}
                 onClick={handleNavClick('pricing')}
               >
-                <DollarSign size={16} className="inline-block mr-1.5" /> Pricing
+                <IndianRupee size={16} className="inline-block mr-1.5" /> Pricing
               </ToggleGroupItem>
             </ToggleGroup>
           </div>
@@ -153,22 +153,16 @@ const Header = ({ onLoginClick, onSignUpClick }) => {
                 }`}
                 onClick={handleNavClick('pricing')}
               >
-                <DollarSign size={16} className="inline-block mr-1.5" /> Pricing
+                <IndianRupee size={16} className="inline-block mr-1.5" /> Pricing
               </a>
 
               <button
                 onClick={onLoginClick}
-                className={`px-3 py-2 text-sm rounded-md transition-colors text-muted-foreground hover:text-foreground hover:bg-muted`}
+                className="px-4 py-2 text-sm rounded-full border border-border bg-background text-foreground hover:bg-accent hover:text-accent-foreground transition-colors"
               >
                 Login
               </button>
 
-              <button
-                onClick={onSignUpClick}
-                className={`px-3 py-2 text-sm rounded-md transition-colors text-muted-foreground hover:text-foreground hover:bg-muted`}
-              >
-                Sign Up
-              </button>
 
               <div className="flex items-center justify-between px-3 py-2">
                 <span className="text-sm text-muted-foreground">Theme</span>
@@ -196,12 +190,9 @@ const Header = ({ onLoginClick, onSignUpClick }) => {
                 />
                 <Sun size={16} className={`${!isDarkMode ? 'text-primary' : 'text-muted-foreground'}`} />
               </div>
-          <div className="rounded-2xl flex gap-2">
-            <Button onClick={onLoginClick} variant="ghost" className="text-muted-foreground hover:text-foreground hover:bg-muted">
+          <div className="rounded-full">
+            <Button onClick={onLoginClick} variant="outline" className="border-border text-foreground hover:bg-accent hover:text-accent-foreground rounded-full">
               Login
-            </Button>
-            <Button onClick={onSignUpClick} variant="default" className="bg-primary text-primary-foreground hover:bg-primary/90">
-              Sign Up
             </Button>
           </div>
         </div>

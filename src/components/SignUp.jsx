@@ -7,7 +7,7 @@ import { Label } from '@/components/ui/label'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Eye, EyeOff, Mail, Lock, Loader2, ArrowLeft, User } from 'lucide-react'
 
-const SignUp = ({ onBackToHome, onSwitchToLogin }) => {
+const SignUp = ({ onBackToHome, onSwitchToLogin, onSignUp }) => {
   const [showPassword, setShowPassword] = React.useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = React.useState(false)
   const [isLoading, setIsLoading] = React.useState(false)
@@ -38,7 +38,9 @@ const SignUp = ({ onBackToHome, onSwitchToLogin }) => {
       console.log('SignUp data:', data)
       // Here you would typically make an API call to create the account
       await new Promise(resolve => setTimeout(resolve, 2000))
-      alert('Account created successfully!')
+      
+      // Call the signup handler passed from parent
+      onSignUp(data)
     } catch (error) {
       console.error('SignUp error:', error)
     } finally {

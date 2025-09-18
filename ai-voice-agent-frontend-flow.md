@@ -24,6 +24,7 @@ Step-by-step visual/graphic showing:
 - Multilingual NLP (minimum 5 regional languages + English)  
 - Intent Recognition & Context Management  
 - Voice and Text Support  
+- Advanced Call Analytics (emotion detection, sentiment analysis, satisfaction scoring)  
 - Privacy & Security  
 - Custom Dashboard for Institutions  
 - Integration with existing web/messaging platforms  
@@ -32,6 +33,7 @@ Step-by-step visual/graphic showing:
 - Reduced staff workload  
 - Improved parent satisfaction  
 - Easy onboarding and maintenance  
+- Data-driven insights for better service delivery  
 
 ### Testimonials / Case Studies
 - Real or placeholder feedback from partner colleges & institutes  
@@ -52,6 +54,7 @@ Quick links:
 - Supported Languages & Voice Capabilities  
 - AI & FAQ Ingestion  
 - Interaction Logging and Review  
+- Call Analytics & Emotion Detection  
 - Privacy Compliance  
 
 ### Solutions
@@ -86,6 +89,8 @@ Quick links:
 Interactive preview/mockup of admin dashboard:  
 - Query intent logs  
 - Conversation analytics  
+- Emotion and sentiment analytics  
+- Call satisfaction metrics  
 - FAQ management  
 - Human fallback workflow  
 
@@ -97,6 +102,7 @@ Interactive preview/mockup of admin dashboard:
 - API details  
 - Integration steps (Web, WhatsApp, Telegram, etc.)  
 - Voice agent customization instructions  
+- Analytics API and data export features  
 
 ### Support
 - FAQ  
