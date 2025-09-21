@@ -8,6 +8,8 @@ import { useState, useEffect } from 'react';
 export const useTaskBoard = (userId = null) => {
   const [tasks, setTasks] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [draggedTask, setDraggedTask] = useState(null);
+  const [draggedOverColumn, setDraggedOverColumn] = useState(null);
 
   // Mock data - replace with your API calls
   useEffect(() => {
@@ -138,46 +140,100 @@ export const useTaskBoard = (userId = null) => {
     }
   ];
 
-  const handleDragEnd = async (result) => {
-    const { destination, source, draggableId } = result;
+  // HTML5 Drag and Drop Handlers
+  const handleTaskDragStart = (e, task) => {
+    console.log('Drag started for task:', task.title);
+    setDraggedTask(task);
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('text/plain', task.id);
+    
+    // Add some visual feedback
+    setTimeout(() => {
+      e.target.style.opacity = '0.5';
+    }, 0);
+  };
 
-    if (!destination) return;
+  const handleTaskDragEnd = (e) => {
+    console.log('Drag ended');
+    e.target.style.opacity = '1';
+    setDraggedTask(null);
+    setDraggedOverColumn(null);
+  };
 
-    if (
-      destination.droppableId === source.droppableId &&
-      destination.index === source.index
-    ) {
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+  };
+
+  const handleDragLeave = (e) => {
+    // Only reset if we're leaving the column entirely
+    if (!e.currentTarget.contains(e.relatedTarget)) {
+      setDraggedOverColumn(null);
+    }
+  };
+
+  const handleDrop = (e, columnId) => {
+    e.preventDefault();
+    console.log('Drop event for column:', columnId, 'with task:', draggedTask?.title);
+    
+    if (!draggedTask) {
+      console.log('No dragged task found');
       return;
     }
 
-    const task = tasks.find(t => t.id === draggableId);
-    if (!task) return;
+    if (draggedTask.status === columnId) {
+      console.log('Task already in this column');
+      return;
+    }
 
-    const newStatus = destination.droppableId;
-    
-    // Optimistic update
+    console.log(`Moving task ${draggedTask.title} from ${draggedTask.status} to ${columnId}`);
+
+    // Update task status
     setTasks(prevTasks =>
-      prevTasks.map(t =>
-        t.id === draggableId
-          ? { ...t, status: newStatus, updated_at: new Date().toISOString() }
-          : t
+      prevTasks.map(task =>
+        task.id === draggedTask.id
+          ? { ...task, status: columnId, updated_at: new Date().toISOString() }
+          : task
       )
     );
 
-    try {
-      // Replace with your API call to update task status
-      await updateTaskStatus(draggableId, newStatus);
-    } catch (error) {
-      console.error('Error updating task status:', error);
-      // Revert on error
-      setTasks(prevTasks =>
-        prevTasks.map(t =>
-          t.id === draggableId
-            ? { ...t, status: task.status }
-            : t
-        )
-      );
-    }
+    // Here you would typically make an API call to update the task
+    updateTaskStatus(draggedTask.id, columnId);
+    
+    setDraggedTask(null);
+    setDraggedOverColumn(null);
+  };
+
+  const handleStatusChange = (taskId, newStatus) => {
+    setTasks(prevTasks =>
+      prevTasks.map(task =>
+        task.id === taskId
+          ? { ...task, status: newStatus, updated_at: new Date().toISOString() }
+          : task
+      )
+    );
+
+    // API call would go here
+    updateTaskStatus(taskId, newStatus);
+  };
+
+  // Mock API functions - replace with real API calls
+  const updateTaskStatus = async (taskId, newStatus) => {
+    // Simulate API call
+    console.log(`Updating task ${taskId} to status ${newStatus}`);
+    return new Promise(resolve => setTimeout(resolve, 100));
+  };
+
+  const createTask = async (task) => {
+    // Simulate API call
+    console.log('Creating task:', task);
+    return new Promise(resolve => setTimeout(resolve, 100));
+  };
+
+  const removeTask = async (taskId) => {
+    // Simulate API call
+    console.log(`Removing task ${taskId}`);
+    return new Promise(resolve => setTimeout(resolve, 100));
   };
 
   // Add new task
@@ -220,7 +276,15 @@ export const useTaskBoard = (userId = null) => {
   return {
     columns,
     tasks,
-    handleDragEnd,
+    isLoading,
+    draggedTask,
+    draggedOverColumn,
+    handleTaskDragStart,
+    handleTaskDragEnd,
+    handleDragOver,
+    handleDragLeave,
+    handleDrop,
+    handleStatusChange,
     addTask,
     deleteTask,
     isLoading

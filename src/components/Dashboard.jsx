@@ -5,7 +5,7 @@ import { BarChart3, MessageSquare, Clock, Heart, AlertTriangle, Paperclip, Brain
 import ConversationLogs from './ConversationLogs';
 import FAQManagement from './FAQManagement';
 import UserManagement from './UserManagement';
-import { TaskBoard } from './TaskBoard';
+import TaskBoard from './TaskBoard';
 import Logo from './Logo';
 import { useTheme } from '../contexts/ThemeContext';
 
