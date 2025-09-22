@@ -487,12 +487,12 @@ const AnalyticsDashboard = () => {
               <span className="text-sm text-muted-foreground">This Quarter</span>
               <span className="text-sm font-medium text-emerald-600">31.5% faster</span>
             </div>
-            <div className="mt-6 p-4 bg-emerald-50 border border-emerald-200 rounded-lg">
+            <div className="mt-6 p-4 bg-muted/30 rounded-lg">
               <div className="flex items-center space-x-2">
-                <CheckCircle className="w-4 h-4 text-emerald-600" />
-                <span className="text-sm font-medium text-emerald-800">SLA Target Met</span>
+                <CheckCircle className="w-4 h-4 text-muted-foreground" />
+                <span className="text-sm font-medium text-foreground">SLA Target Met</span>
               </div>
-              <p className="text-xs text-emerald-700 mt-1">92.4% of queries answered within 3 seconds</p>
+              <p className="text-xs text-muted-foreground mt-1">92.4% of queries answered within 3 seconds</p>
             </div>
           </div>
         </ChartCard>
@@ -583,30 +583,30 @@ const AnalyticsDashboard = () => {
           </div>
         </ChartCard>
 
-        <ChartCard title="Channel Preference" description="User behavior across platforms">
+        <ChartCard title="Query Resolution Time" description="Time taken to resolve different query types">
           <div className="space-y-4">
             {[
-              { channel: 'Voice Calls', usage: 52, growth: 12.3 },
-              { channel: 'WhatsApp', usage: 31, growth: 8.7 },
-              { channel: 'Web Chat', usage: 17, growth: -2.1 }
+              { category: 'General Information', time: '1.2s', growth: -8.3 },
+              { category: 'Admission Process', time: '2.8s', growth: 12.1 },
+              { category: 'Fee Inquiries', time: '3.5s', growth: -5.2 }
             ].map((item) => (
-              <div key={item.channel} className="p-4 bg-muted/30 rounded-lg">
+              <div key={item.category} className="p-4 bg-muted/30 rounded-lg">
                 <div className="flex justify-between items-center mb-2">
-                  <span className="font-medium text-foreground">{item.channel}</span>
+                  <span className="font-medium text-foreground">{item.category}</span>
                   <div className="flex items-center space-x-1">
-                    {item.growth > 0 ? 
-                      <ArrowUp className="w-4 h-4 text-emerald-600" /> : 
-                      <ArrowDown className="w-4 h-4 text-red-600" />
+                    {item.growth < 0 ? 
+                      <ArrowDown className="w-4 h-4 text-emerald-600" /> : 
+                      <ArrowUp className="w-4 h-4 text-red-600" />
                     }
                     <span className={`text-sm font-medium ${
-                      item.growth > 0 ? 'text-emerald-600' : 'text-red-600'
+                      item.growth < 0 ? 'text-emerald-600' : 'text-red-600'
                     }`}>
                       {Math.abs(item.growth)}%
                     </span>
                   </div>
                 </div>
-                <div className="text-2xl font-bold text-foreground mb-1">{item.usage}%</div>
-                <ProgressBar percentage={item.usage} />
+                <div className="text-2xl font-bold text-foreground mb-1">{item.time}</div>
+                <div className="text-xs text-muted-foreground">Average response time</div>
               </div>
             ))}
           </div>
@@ -702,26 +702,26 @@ const AnalyticsDashboard = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <ChartCard title="Audio Quality Distribution" description="Call quality breakdown">
           <div className="space-y-4">
-            <div className="flex items-center justify-between p-4 bg-emerald-50 border border-emerald-200 rounded-lg">
+            <div className="flex items-center justify-between p-4 bg-muted/30 rounded-lg">
               <div className="flex items-center space-x-3">
-                <div className="w-4 h-4 bg-emerald-500 rounded-full"></div>
-                <span className="font-medium text-emerald-800">Excellent</span>
+                <div className="w-4 h-4 bg-muted-foreground rounded-full"></div>
+                <span className="font-medium text-foreground">Excellent</span>
               </div>
-              <span className="text-emerald-800 font-semibold">72%</span>
+              <span className="text-foreground font-semibold">72%</span>
             </div>
-            <div className="flex items-center justify-between p-4 bg-blue-50 border border-blue-200 rounded-lg">
+            <div className="flex items-center justify-between p-4 bg-muted/30 rounded-lg">
               <div className="flex items-center space-x-3">
-                <div className="w-4 h-4 bg-blue-500 rounded-full"></div>
-                <span className="font-medium text-blue-800">Good</span>
+                <div className="w-4 h-4 bg-muted-foreground rounded-full"></div>
+                <span className="font-medium text-foreground">Good</span>
               </div>
-              <span className="text-blue-800 font-semibold">23%</span>
+              <span className="text-foreground font-semibold">23%</span>
             </div>
-            <div className="flex items-center justify-between p-4 bg-amber-50 border border-amber-200 rounded-lg">
+            <div className="flex items-center justify-between p-4 bg-muted/30 rounded-lg">
               <div className="flex items-center space-x-3">
-                <div className="w-4 h-4 bg-amber-500 rounded-full"></div>
-                <span className="font-medium text-amber-800">Fair</span>
+                <div className="w-4 h-4 bg-muted-foreground rounded-full"></div>
+                <span className="font-medium text-foreground">Fair</span>
               </div>
-              <span className="text-amber-800 font-semibold">5%</span>
+              <span className="text-foreground font-semibold">5%</span>
             </div>
           </div>
         </ChartCard>
@@ -862,34 +862,34 @@ const AnalyticsDashboard = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <ChartCard title="Sentiment Distribution" description="Overall emotional response analysis">
           <div className="space-y-4">
-            <div className="flex items-center justify-between p-4 bg-emerald-50 border border-emerald-200 rounded-lg">
+            <div className="flex items-center justify-between p-4 bg-muted/30 rounded-lg">
               <div className="flex items-center space-x-3">
-                <Smile className="w-5 h-5 text-emerald-600" />
-                <span className="font-medium text-emerald-800">Positive</span>
+                <Smile className="w-5 h-5 text-muted-foreground" />
+                <span className="font-medium text-foreground">Positive</span>
               </div>
               <div className="text-right">
-                <span className="text-2xl font-bold text-emerald-800">68.3%</span>
-                <div className="text-xs text-emerald-600">1,670 conversations</div>
+                <span className="text-2xl font-bold text-foreground">68.3%</span>
+                <div className="text-xs text-muted-foreground">1,670 conversations</div>
               </div>
             </div>
-            <div className="flex items-center justify-between p-4 bg-blue-50 border border-blue-200 rounded-lg">
+            <div className="flex items-center justify-between p-4 bg-muted/30 rounded-lg">
               <div className="flex items-center space-x-3">
-                <Meh className="w-5 h-5 text-blue-600" />
-                <span className="font-medium text-blue-800">Neutral</span>
+                <Meh className="w-5 h-5 text-muted-foreground" />
+                <span className="font-medium text-foreground">Neutral</span>
               </div>
               <div className="text-right">
-                <span className="text-2xl font-bold text-blue-800">24.1%</span>
-                <div className="text-xs text-blue-600">590 conversations</div>
+                <span className="text-2xl font-bold text-foreground">24.1%</span>
+                <div className="text-xs text-muted-foreground">590 conversations</div>
               </div>
             </div>
-            <div className="flex items-center justify-between p-4 bg-red-50 border border-red-200 rounded-lg">
+            <div className="flex items-center justify-between p-4 bg-muted/30 rounded-lg">
               <div className="flex items-center space-x-3">
-                <Frown className="w-5 h-5 text-red-600" />
-                <span className="font-medium text-red-800">Negative</span>
+                <Frown className="w-5 h-5 text-muted-foreground" />
+                <span className="font-medium text-foreground">Negative</span>
               </div>
               <div className="text-right">
-                <span className="text-2xl font-bold text-red-800">7.6%</span>
-                <div className="text-xs text-red-600">190 conversations</div>
+                <span className="text-2xl font-bold text-foreground">7.6%</span>
+                <div className="text-xs text-muted-foreground">190 conversations</div>
               </div>
             </div>
           </div>
@@ -1061,31 +1061,31 @@ const AnalyticsDashboard = () => {
 
         <ChartCard title="Learning Analytics" description="Continuous improvement metrics">
           <div className="space-y-4">
-            <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
+            <div className="p-4 bg-muted/30 rounded-lg">
               <div className="flex items-center space-x-2 mb-2">
-                <Brain className="w-4 h-4 text-blue-600" />
-                <span className="font-medium text-blue-800">New Knowledge Acquired</span>
+                <Brain className="w-4 h-4 text-muted-foreground" />
+                <span className="font-medium text-foreground">New Knowledge Acquired</span>
               </div>
-              <div className="text-2xl font-bold text-blue-800">347</div>
-              <div className="text-sm text-blue-600">New FAQ entries this week</div>
+              <div className="text-2xl font-bold text-foreground">347</div>
+              <div className="text-sm text-muted-foreground">New FAQ entries this week</div>
             </div>
             
-            <div className="p-4 bg-emerald-50 border border-emerald-200 rounded-lg">
+            <div className="p-4 bg-muted/30 rounded-lg">
               <div className="flex items-center space-x-2 mb-2">
-                <CheckCircle className="w-4 h-4 text-emerald-600" />
-                <span className="font-medium text-emerald-800">Human Corrections</span>
+                <CheckCircle className="w-4 h-4 text-muted-foreground" />
+                <span className="font-medium text-foreground">Human Corrections</span>
               </div>
-              <div className="text-2xl font-bold text-emerald-800">23</div>
-              <div className="text-sm text-emerald-600">Applied to improve responses</div>
+              <div className="text-2xl font-bold text-foreground">23</div>
+              <div className="text-sm text-muted-foreground">Applied to improve responses</div>
             </div>
             
-            <div className="p-4 bg-purple-50 border border-purple-200 rounded-lg">
+            <div className="p-4 bg-muted/30 rounded-lg">
               <div className="flex items-center space-x-2 mb-2">
-                <Star className="w-4 h-4 text-purple-600" />
-                <span className="font-medium text-purple-800">Model Updates</span>
+                <Star className="w-4 h-4 text-muted-foreground" />
+                <span className="font-medium text-foreground">Model Updates</span>
               </div>
-              <div className="text-2xl font-bold text-purple-800">3</div>
-              <div className="text-sm text-purple-600">Performance improvements</div>
+              <div className="text-2xl font-bold text-foreground">3</div>
+              <div className="text-sm text-muted-foreground">Performance improvements</div>
             </div>
           </div>
         </ChartCard>
@@ -1237,14 +1237,16 @@ const AnalyticsDashboard = () => {
         </div>
 
         {/* Navigation Tabs */}
-        <div className="flex space-x-1 bg-muted/30 rounded-lg p-1 mb-8 overflow-x-auto">
-          {tabs.map((tab) => {
+        <div className="flex bg-muted/30 rounded-lg p-1 mb-8 overflow-x-auto">
+          {tabs.map((tab, index) => {
             const Icon = tab.icon;
             return (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`flex items-center space-x-2 px-4 py-2 rounded-md text-sm font-medium transition-colors whitespace-nowrap ${
+                className={`flex-1 flex items-center justify-center space-x-2 px-3 py-2 rounded-md text-sm font-medium transition-colors whitespace-nowrap ${
+                  index > 0 ? 'ml-1' : ''
+                } ${
                   activeTab === tab.id
                     ? 'bg-primary text-primary-foreground shadow-sm'
                     : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
