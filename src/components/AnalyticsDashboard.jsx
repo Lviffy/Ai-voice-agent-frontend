@@ -1221,14 +1221,14 @@ const AnalyticsDashboard = () => {
               size="sm"
               onClick={handleRefresh}
               disabled={isRefreshing}
-              className="bg-background border-border/30 text-foreground hover:bg-muted/50"
+              className="bg-background border-border/30 text-foreground hover:bg-foreground hover:text-background transition-colors duration-200"
             >
               <RefreshCw className={`w-4 h-4 mr-2 ${isRefreshing ? 'animate-spin' : ''}`} />
               Refresh
             </Button>
             <Button
               size="sm"
-              className="bg-primary text-primary-foreground hover:bg-primary/90"
+              className="bg-foreground text-background hover:bg-background hover:text-foreground border border-foreground transition-colors duration-200"
             >
               <Download className="w-4 h-4 mr-2" />
               Export
