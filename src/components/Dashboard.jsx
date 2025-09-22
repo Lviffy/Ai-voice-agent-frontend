@@ -293,7 +293,7 @@ const Dashboard = ({ onLogout }) => {
   };
 
   return (
-    <div className="min-h-screen bg-background text-foreground flex relative overflow-hidden">
+    <div className="h-screen bg-background text-foreground flex relative overflow-hidden">
       {/* Cosmic particle effect (background dots) */}
       <div className="absolute top-0 left-0 w-full h-full cosmic-grid opacity-20 z-0"></div>
       
@@ -303,15 +303,14 @@ const Dashboard = ({ onLogout }) => {
       </div>
 
       {/* Sidebar */}
-      <div className={`${sidebarOpen ? 'w-64' : 'w-16'} bg-card border-r border-border transition-all duration-300 relative z-10`}>
+      <div className={`${sidebarOpen ? 'w-64' : 'w-16'} bg-card border-r border-border transition-all duration-300 relative z-10 h-full flex flex-col overflow-hidden`}>
         {/* Header */}
-        <div className="p-6 border-b border-border">
+        <div className="p-6 border-b border-border flex-shrink-0">
           <div className="flex items-center space-x-3">
             <Logo />
             {sidebarOpen && (
               <div>
-                <h2 className="text-xl font-bold text-foreground">AI Voice Agent</h2>
-                <p className="text-sm text-muted-foreground">Dashboard</p>
+                <h2 className="text-xl font-bold text-foreground">Voxi Playground</h2>
               </div>
             )}
           </div>
@@ -326,7 +325,7 @@ const Dashboard = ({ onLogout }) => {
         </div>
         
         {/* Navigation */}
-        <nav className="mt-6">
+        <nav className="mt-6 flex-1 overflow-y-auto">
           {sidebarItems.map((item) => {
             const Icon = item.icon;
             return (
@@ -345,7 +344,7 @@ const Dashboard = ({ onLogout }) => {
         </nav>
 
         {/* Footer */}
-        <div className="absolute bottom-0 w-full p-6 border-t border-border">
+        <div className="p-6 border-t border-border flex-shrink-0">
           <Button 
             variant="ghost"
             onClick={onLogout}
@@ -358,37 +357,25 @@ const Dashboard = ({ onLogout }) => {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 overflow-auto relative z-10">
-        {/* Top Bar */}
-        <div className="bg-card border-b border-border p-4 sticky top-0 z-20">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              <h1 className="text-xl font-semibold text-foreground capitalize">
-                {activeSection === 'faq' ? 'FAQ Management' : 
-                 activeSection === 'kanban' ? `Task Board - ${selectedUser?.name}` : 
-                 activeSection === 'voice-assistant' ? 'Voice Assistant' :
-                 activeSection}
-              </h1>
-            </div>
-            <div className="flex items-center space-x-3">
-              <div className="flex items-center gap-2 rounded-full px-3 py-2 bg-card border border-border">
-                <Moon size={16} className={`${isDarkMode ? 'text-primary' : 'text-muted-foreground'}`} />
-                <Switch
-                  checked={!isDarkMode}
-                  onCheckedChange={toggleTheme}
-                  className="data-[state=checked]:bg-primary"
-                />
-                <Sun size={16} className={`${!isDarkMode ? 'text-primary' : 'text-muted-foreground'}`} />
-              </div>
-              <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center">
-                <span className="text-xs font-medium text-primary-foreground">AD</span>
-              </div>
-            </div>
+      <div className="flex-1 flex flex-col h-full overflow-hidden relative z-10">
+        {/* Floating controls */}
+        <div className="absolute top-4 right-4 z-30 flex items-center space-x-6">
+          <div className="flex items-center gap-2 rounded-full px-3 py-2 bg-card/80 backdrop-blur-md border border-border/50 shadow-lg">
+            <Moon size={16} className={`${isDarkMode ? 'text-primary' : 'text-muted-foreground'}`} />
+            <Switch
+              checked={!isDarkMode}
+              onCheckedChange={toggleTheme}
+              className="data-[state=checked]:bg-primary"
+            />
+            <Sun size={16} className={`${!isDarkMode ? 'text-primary' : 'text-muted-foreground'}`} />
+          </div>
+          <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center shadow-lg">
+            <span className="text-xs font-medium text-primary-foreground">AD</span>
           </div>
         </div>
 
         {/* Content Area */}
-        <div className={activeSection === 'kanban' || activeSection === 'settings' || activeSection === 'support' || activeSection === 'voice-assistant' ? '' : 'p-8'}>
+        <div className={`flex-1 overflow-y-auto ${activeSection === 'kanban' || activeSection === 'settings' || activeSection === 'support' || activeSection === 'voice-assistant' ? 'pt-16' : 'pt-16 p-8'}`}>
           {renderSectionContent()}
         </div>
       </div>

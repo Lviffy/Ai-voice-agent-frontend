@@ -142,7 +142,7 @@ const VoiceAssistant = () => {
       {/* Header Section - Consistent with other dashboard sections */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-foreground">Voice Assistant</h2>
+          <h2 className="text-3xl font-bold text-foreground">Voice Assistant</h2>
           <p className="text-muted-foreground">Interactive AI assistant for voice conversations and support</p>
         </div>
         <div className="flex items-center space-x-3">

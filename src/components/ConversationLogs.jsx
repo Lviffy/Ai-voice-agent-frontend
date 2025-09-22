@@ -74,7 +74,7 @@ const ConversationLogs = () => {
   return (
     <div className="max-w-7xl mx-auto p-8 space-y-6">
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold text-foreground">Conversation Logs</h2>
+        <h2 className="text-3xl font-bold text-foreground">Conversation Logs</h2>
         <Button className="bg-primary text-primary-foreground hover:bg-primary/80">
           <Download className="w-4 h-4 mr-2" />
           Export

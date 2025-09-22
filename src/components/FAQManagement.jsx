@@ -120,7 +120,7 @@ const FAQManagement = () => {
   return (
     <div className="max-w-7xl mx-auto p-8 space-y-6">
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold text-foreground">FAQ Management</h2>
+        <h2 className="text-3xl font-bold text-foreground">FAQ Management</h2>
         <Button 
           onClick={() => setIsAddingNew(true)}
           className="bg-primary text-primary-foreground hover:bg-primary/80"
