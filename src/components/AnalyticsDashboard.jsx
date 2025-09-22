@@ -155,9 +155,9 @@ const AnalyticsDashboard = () => {
         <span className="text-foreground">{label}</span>
         <span className="text-muted-foreground">{percentage}%</span>
       </div>}
-      <div className="w-full bg-muted rounded-full h-2">
+      <div className="w-full bg-muted dark:bg-white rounded-full h-2">
         <div 
-          className={`bg-${color} h-2 rounded-full transition-all duration-300`}
+          className="bg-white dark:bg-black h-2 rounded-full transition-all duration-300"
           style={{ width: `${percentage}%` }}
         />
       </div>
@@ -1050,7 +1050,7 @@ const AnalyticsDashboard = () => {
                 <div className="relative">
                   <ProgressBar percentage={(item.accuracy / item.target) * 100} />
                   <div 
-                    className="absolute top-0 w-0.5 h-2 bg-gray-400"
+                    className="absolute top-0 w-0.5 h-2 bg-gray-800 dark:bg-gray-400"
                     style={{ left: `${item.target}%` }}
                   />
                 </div>
