@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Card } from './ui/card';
 import { Button } from './ui/button';
 import { Switch } from './ui/switch';
-import { BarChart3, MessageSquare, Clock, Heart, AlertTriangle, Paperclip, Brain, Play, Users, Settings, BookOpen, HelpCircle, LogOut, Menu, X, Phone, Sun, Moon } from 'lucide-react';
+import { BarChart3, MessageSquare, Clock, Heart, AlertTriangle, Paperclip, Brain, Play, Users, Settings, BookOpen, HelpCircle, LogOut, Menu, X, Phone, Sun, Moon, Mic } from 'lucide-react';
 import ConversationLogs from './ConversationLogs';
 import FAQManagement from './FAQManagement';
 import UserManagement from './UserManagement';
@@ -10,6 +10,7 @@ import TaskBoard from './TaskBoard';
 import SettingsComponent from './Settings';
 import RaiseTicket from './RaiseTicket';
 import AnalyticsDashboard from './AnalyticsDashboard';
+import VoiceAssistant from './VoiceAssistant';
 import Logo from './Logo';
 import { useTheme } from '../contexts/ThemeContext';
 
@@ -53,6 +54,7 @@ const Dashboard = ({ onLogout }) => {
   const sidebarItems = [
     { id: 'analytics', icon: BarChart3, label: 'Analytics' },
     { id: 'conversations', icon: MessageSquare, label: 'Conversation Logs' },
+    { id: 'voice-assistant', icon: Mic, label: 'Voice Assistant' },
     { id: 'faq', icon: BookOpen, label: 'FAQ Management' },
     { id: 'users', icon: Users, label: 'User Management' },
     { id: 'settings', icon: Settings, label: 'Settings' },
@@ -273,6 +275,8 @@ const Dashboard = ({ onLogout }) => {
         return <AnalyticsDashboard />;
       case 'conversations':
         return <ConversationLogs />;
+      case 'voice-assistant':
+        return <VoiceAssistant />;
       case 'faq':
         return <FAQManagement />;
       case 'users':
@@ -362,6 +366,7 @@ const Dashboard = ({ onLogout }) => {
               <h1 className="text-xl font-semibold text-foreground capitalize">
                 {activeSection === 'faq' ? 'FAQ Management' : 
                  activeSection === 'kanban' ? `Task Board - ${selectedUser?.name}` : 
+                 activeSection === 'voice-assistant' ? 'Voice Assistant' :
                  activeSection}
               </h1>
             </div>
@@ -383,7 +388,7 @@ const Dashboard = ({ onLogout }) => {
         </div>
 
         {/* Content Area */}
-        <div className={activeSection === 'kanban' || activeSection === 'settings' || activeSection === 'support' ? '' : 'p-8'}>
+        <div className={activeSection === 'kanban' || activeSection === 'settings' || activeSection === 'support' || activeSection === 'voice-assistant' ? '' : 'p-8'}>
           {renderSectionContent()}
         </div>
       </div>
