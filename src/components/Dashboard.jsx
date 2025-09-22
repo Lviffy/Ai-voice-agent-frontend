@@ -298,7 +298,7 @@ const Dashboard = ({ onLogout }) => {
       <div className="absolute top-0 left-0 w-full h-full cosmic-grid opacity-20 z-0"></div>
       
       {/* Gradient glow effect */}
-      <div className="absolute top-1/3 right-1/4 w-[400px] h-[400px] rounded-full">
+      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] rounded-full">
         <div className="w-full h-full opacity-5 bg-primary blur-[100px]"></div>
       </div>
 
