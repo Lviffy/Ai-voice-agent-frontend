@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { Card } from './ui/card';
 import { Button } from './ui/button';
-import { BarChart3, MessageSquare, Clock, Heart, AlertTriangle, Paperclip, Brain, Play, Users, Settings, BookOpen, HelpCircle, LogOut, Menu, X, Phone } from 'lucide-react';
+import { Switch } from './ui/switch';
+import { BarChart3, MessageSquare, Clock, Heart, AlertTriangle, Paperclip, Brain, Play, Users, Settings, BookOpen, HelpCircle, LogOut, Menu, X, Phone, Sun, Moon } from 'lucide-react';
 import ConversationLogs from './ConversationLogs';
 import FAQManagement from './FAQManagement';
 import UserManagement from './UserManagement';
 import TaskBoard from './TaskBoard';
+import SettingsComponent from './Settings';
 import Logo from './Logo';
 import { useTheme } from '../contexts/ThemeContext';
 
@@ -52,7 +54,6 @@ const Dashboard = ({ onLogout }) => {
     { id: 'faq', icon: BookOpen, label: 'FAQ Management' },
     { id: 'users', icon: Users, label: 'User Management' },
     { id: 'settings', icon: Settings, label: 'Settings' },
-    { id: 'documentation', icon: BookOpen, label: 'Documentation' },
     { id: 'support', icon: HelpCircle, label: 'Support' }
   ];
 
@@ -277,23 +278,7 @@ const Dashboard = ({ onLogout }) => {
       case 'kanban':
         return <TaskBoard userId={selectedUser?.id?.toString()} onBack={handleBackFromKanban} />;
       case 'settings':
-        return (
-          <div className="space-y-6">
-            <h2 className="text-2xl font-bold text-foreground">Settings</h2>
-            <Card className="p-6 bg-card border-border">
-              <p className="text-muted-foreground">Configure system settings, language preferences, and integration options.</p>
-            </Card>
-          </div>
-        );
-      case 'documentation':
-        return (
-          <div className="space-y-6">
-            <h2 className="text-2xl font-bold text-foreground">Documentation</h2>
-            <Card className="p-6 bg-card border-border">
-              <p className="text-muted-foreground">API documentation, integration guides, and technical resources.</p>
-            </Card>
-          </div>
-        );
+        return <SettingsComponent />;
       case 'support':
         return (
           <div className="space-y-6">
@@ -386,14 +371,15 @@ const Dashboard = ({ onLogout }) => {
               </h1>
             </div>
             <div className="flex items-center space-x-3">
-              <Button 
-                variant="outline" 
-                size="sm"
-                onClick={toggleTheme}
-                className="border-border"
-              >
-                <span className="text-xs">{isDarkMode ? '☀️' : '🌙'}</span>
-              </Button>
+              <div className="flex items-center gap-2 rounded-full px-3 py-2 bg-card border border-border">
+                <Moon size={16} className={`${isDarkMode ? 'text-primary' : 'text-muted-foreground'}`} />
+                <Switch
+                  checked={!isDarkMode}
+                  onCheckedChange={toggleTheme}
+                  className="data-[state=checked]:bg-primary"
+                />
+                <Sun size={16} className={`${!isDarkMode ? 'text-primary' : 'text-muted-foreground'}`} />
+              </div>
               <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center">
                 <span className="text-xs font-medium text-primary-foreground">AD</span>
               </div>
@@ -402,7 +388,7 @@ const Dashboard = ({ onLogout }) => {
         </div>
 
         {/* Content Area */}
-        <div className={activeSection === 'kanban' ? '' : 'p-8'}>
+        <div className={activeSection === 'kanban' || activeSection === 'settings' ? '' : 'p-8'}>
           {renderSectionContent()}
         </div>
       </div>
