@@ -8,6 +8,7 @@ import FAQManagement from './FAQManagement';
 import UserManagement from './UserManagement';
 import TaskBoard from './TaskBoard';
 import SettingsComponent from './Settings';
+import RaiseTicket from './RaiseTicket';
 import Logo from './Logo';
 import { useTheme } from '../contexts/ThemeContext';
 
@@ -54,7 +55,7 @@ const Dashboard = ({ onLogout }) => {
     { id: 'faq', icon: BookOpen, label: 'FAQ Management' },
     { id: 'users', icon: Users, label: 'User Management' },
     { id: 'settings', icon: Settings, label: 'Settings' },
-    { id: 'support', icon: HelpCircle, label: 'Support' }
+    { id: 'support', icon: HelpCircle, label: 'Raise a Ticket' }
   ];
 
   const MetricCard = ({ title, children, className = "" }) => (
@@ -280,14 +281,7 @@ const Dashboard = ({ onLogout }) => {
       case 'settings':
         return <SettingsComponent />;
       case 'support':
-        return (
-          <div className="space-y-6">
-            <h2 className="text-2xl font-bold text-foreground">Support</h2>
-            <Card className="p-6 bg-card border-border">
-              <p className="text-muted-foreground">Get help, submit tickets, and access customer support resources.</p>
-            </Card>
-          </div>
-        );
+        return <RaiseTicket />;
       default:
         return renderAnalyticsContent();
     }
@@ -388,7 +382,7 @@ const Dashboard = ({ onLogout }) => {
         </div>
 
         {/* Content Area */}
-        <div className={activeSection === 'kanban' || activeSection === 'settings' ? '' : 'p-8'}>
+        <div className={activeSection === 'kanban' || activeSection === 'settings' || activeSection === 'support' ? '' : 'p-8'}>
           {renderSectionContent()}
         </div>
       </div>
