@@ -118,7 +118,7 @@ const FAQManagement = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="max-w-7xl mx-auto p-8 space-y-6">
       <div className="flex items-center justify-between">
         <h2 className="text-2xl font-bold text-foreground">FAQ Management</h2>
         <Button 
@@ -158,15 +158,15 @@ const FAQManagement = () => {
       {/* Add New FAQ Form */}
       {isAddingNew && (
         <Card className="p-6">
-          <h3 className="text-lg font-semibold mb-4">Add New FAQ</h3>
+          <h3 className="text-lg font-semibold mb-4 text-foreground">Add New FAQ</h3>
           <div className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Category</label>
+                <label className="block text-sm font-medium text-foreground mb-2">Category</label>
                 <select
                   value={newFAQ.category}
                   onChange={(e) => setNewFAQ({...newFAQ, category: e.target.value})}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 bg-background border border-border/30 text-foreground rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary/30"
                 >
                   {categories.slice(1).map(cat => (
                     <option key={cat.value} value={cat.value}>{cat.label}</option>
@@ -174,11 +174,11 @@ const FAQManagement = () => {
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Language</label>
+                <label className="block text-sm font-medium text-foreground mb-2">Language</label>
                 <select
                   value={newFAQ.language}
                   onChange={(e) => setNewFAQ({...newFAQ, language: e.target.value})}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 bg-background border border-border/30 text-foreground rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary/30"
                 >
                   {languages.map(lang => (
                     <option key={lang} value={lang}>{lang}</option>
@@ -187,36 +187,36 @@ const FAQManagement = () => {
               </div>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Question</label>
+              <label className="block text-sm font-medium text-foreground mb-2">Question</label>
               <input
                 type="text"
                 value={newFAQ.question}
                 onChange={(e) => setNewFAQ({...newFAQ, question: e.target.value})}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 bg-background border border-border/30 text-foreground rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary/30"
                 placeholder="Enter the question..."
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Answer</label>
+              <label className="block text-sm font-medium text-foreground mb-2">Answer</label>
               <textarea
                 value={newFAQ.answer}
                 onChange={(e) => setNewFAQ({...newFAQ, answer: e.target.value})}
                 rows={4}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 bg-background border border-border/30 text-foreground rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary/30"
                 placeholder="Enter the answer..."
               />
             </div>
             <div className="flex space-x-2">
               <button
                 onClick={handleSaveNew}
-                className="flex items-center space-x-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
+                className="flex items-center space-x-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 dark:bg-green-700 dark:hover:bg-green-800"
               >
                 <Save className="w-4 h-4" />
                 <span>Save</span>
               </button>
               <button
                 onClick={() => setIsAddingNew(false)}
-                className="flex items-center space-x-2 px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700"
+                className="flex items-center space-x-2 px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-800"
               >
                 <X className="w-4 h-4" />
                 <span>Cancel</span>
@@ -234,11 +234,11 @@ const FAQManagement = () => {
               <div className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Category</label>
+                    <label className="block text-sm font-medium text-foreground mb-2">Category</label>
                     <select
                       value={editingFAQ.category}
                       onChange={(e) => setEditingFAQ({...editingFAQ, category: e.target.value})}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-3 py-2 bg-background border border-border/30 text-foreground rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary/30"
                     >
                       {categories.slice(1).map(cat => (
                         <option key={cat.value} value={cat.value}>{cat.label}</option>
@@ -246,11 +246,11 @@ const FAQManagement = () => {
                     </select>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Language</label>
+                    <label className="block text-sm font-medium text-foreground mb-2">Language</label>
                     <select
                       value={editingFAQ.language}
                       onChange={(e) => setEditingFAQ({...editingFAQ, language: e.target.value})}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-3 py-2 bg-background border border-border/30 text-foreground rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary/30"
                     >
                       {languages.map(lang => (
                         <option key={lang} value={lang}>{lang}</option>
@@ -259,34 +259,34 @@ const FAQManagement = () => {
                   </div>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Question</label>
+                  <label className="block text-sm font-medium text-foreground mb-2">Question</label>
                   <input
                     type="text"
                     value={editingFAQ.question}
                     onChange={(e) => setEditingFAQ({...editingFAQ, question: e.target.value})}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 bg-background border border-border/30 text-foreground rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary/30"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Answer</label>
+                  <label className="block text-sm font-medium text-foreground mb-2">Answer</label>
                   <textarea
                     value={editingFAQ.answer}
                     onChange={(e) => setEditingFAQ({...editingFAQ, answer: e.target.value})}
                     rows={4}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 bg-background border border-border/30 text-foreground rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary/30"
                   />
                 </div>
                 <div className="flex space-x-2">
                   <button
                     onClick={handleSaveEdit}
-                    className="flex items-center space-x-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
+                    className="flex items-center space-x-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 dark:bg-green-700 dark:hover:bg-green-800"
                   >
                     <Save className="w-4 h-4" />
                     <span>Save</span>
                   </button>
                   <button
                     onClick={() => setEditingFAQ(null)}
-                    className="flex items-center space-x-2 px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700"
+                    className="flex items-center space-x-2 px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-800"
                   >
                     <X className="w-4 h-4" />
                     <span>Cancel</span>
@@ -301,34 +301,34 @@ const FAQManagement = () => {
                       <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getCategoryColor(faq.category)}`}>
                         {faq.category}
                       </span>
-                      <span className="inline-flex items-center px-2 py-1 text-xs font-semibold bg-gray-100 text-gray-800 rounded-full">
+                      <span className="inline-flex items-center px-2 py-1 text-xs font-semibold bg-muted/60 text-muted-foreground dark:bg-muted dark:text-muted-foreground rounded-full">
                         <Languages className="w-3 h-3 mr-1" />
                         {faq.language}
                       </span>
-                      <span className="inline-flex items-center px-2 py-1 text-xs font-semibold bg-blue-100 text-blue-800 rounded-full">
+                      <span className="inline-flex items-center px-2 py-1 text-xs font-semibold bg-primary/10 text-primary dark:bg-primary/20 dark:text-primary-foreground rounded-full">
                         <BarChart3 className="w-3 h-3 mr-1" />
                         {faq.usage_count} uses
                       </span>
                     </div>
-                    <h3 className="text-lg font-medium text-gray-900 mb-2">{faq.question}</h3>
-                    <p className="text-gray-600">{faq.answer}</p>
+                    <h3 className="text-lg font-medium text-foreground mb-2">{faq.question}</h3>
+                    <p className="text-muted-foreground">{faq.answer}</p>
                   </div>
                   <div className="flex space-x-2 ml-4">
                     <button
                       onClick={() => handleEdit(faq)}
-                      className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg"
+                      className="p-2 text-primary hover:bg-primary/10 dark:hover:bg-primary/20 rounded-lg transition-colors"
                     >
                       <Edit className="w-4 h-4" />
                     </button>
                     <button
                       onClick={() => handleDelete(faq.id)}
-                      className="p-2 text-red-600 hover:bg-red-50 rounded-lg"
+                      className="p-2 text-destructive hover:bg-destructive/10 dark:hover:bg-destructive/20 rounded-lg transition-colors"
                     >
                       <Trash2 className="w-4 h-4" />
                     </button>
                   </div>
                 </div>
-                <div className="flex items-center justify-between text-sm text-gray-500">
+                <div className="flex items-center justify-between text-sm text-muted-foreground">
                   <span>Last updated: {faq.last_updated}</span>
                   <span>Confidence: {(faq.confidence * 100).toFixed(0)}%</span>
                 </div>
@@ -341,26 +341,26 @@ const FAQManagement = () => {
       {/* Summary Stats */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <Card className="p-4">
-          <div className="text-2xl font-bold text-blue-600">{faqs.length}</div>
-          <div className="text-sm text-gray-600">Total FAQs</div>
+          <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">{faqs.length}</div>
+          <div className="text-sm text-muted-foreground">Total FAQs</div>
         </Card>
         <Card className="p-4">
-          <div className="text-2xl font-bold text-green-600">
+          <div className="text-2xl font-bold text-green-600 dark:text-green-400">
             {new Set(faqs.map(f => f.language)).size}
           </div>
-          <div className="text-sm text-gray-600">Languages</div>
+          <div className="text-sm text-muted-foreground">Languages</div>
         </Card>
         <Card className="p-4">
-          <div className="text-2xl font-bold text-purple-600">
+          <div className="text-2xl font-bold text-purple-600 dark:text-purple-400">
             {faqs.reduce((sum, f) => sum + f.usage_count, 0)}
           </div>
-          <div className="text-sm text-gray-600">Total Usage</div>
+          <div className="text-sm text-muted-foreground">Total Usage</div>
         </Card>
         <Card className="p-4">
-          <div className="text-2xl font-bold text-orange-600">
+          <div className="text-2xl font-bold text-orange-600 dark:text-orange-400">
             {(faqs.reduce((sum, f) => sum + f.confidence, 0) / faqs.length * 100).toFixed(0)}%
           </div>
-          <div className="text-sm text-gray-600">Avg Confidence</div>
+          <div className="text-sm text-muted-foreground">Avg Confidence</div>
         </Card>
       </div>
     </div>

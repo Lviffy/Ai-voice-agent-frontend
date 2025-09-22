@@ -171,6 +171,7 @@ const Header = ({ onLoginClick }) => {
                   <Switch
                     checked={!isDarkMode}
                     onCheckedChange={toggleTheme}
+                    
                     className="data-[state=checked]:bg-primary"
                   />
                   <Sun size={16} className={`${!isDarkMode ? 'text-primary' : 'text-muted-foreground'}`} />
