@@ -9,6 +9,7 @@ import UserManagement from './UserManagement';
 import TaskBoard from './TaskBoard';
 import SettingsComponent from './Settings';
 import RaiseTicket from './RaiseTicket';
+import AnalyticsDashboard from './AnalyticsDashboard';
 import Logo from './Logo';
 import { useTheme } from '../contexts/ThemeContext';
 
@@ -269,7 +270,7 @@ const Dashboard = ({ onLogout }) => {
   const renderSectionContent = () => {
     switch (activeSection) {
       case 'analytics':
-        return renderAnalyticsContent();
+        return <AnalyticsDashboard />;
       case 'conversations':
         return <ConversationLogs />;
       case 'faq':
@@ -283,7 +284,7 @@ const Dashboard = ({ onLogout }) => {
       case 'support':
         return <RaiseTicket />;
       default:
-        return renderAnalyticsContent();
+        return <AnalyticsDashboard />;
     }
   };
 
