@@ -1,75 +1,63 @@
-import React, { useState } from 'react';
-import { Card } from './ui/card';
-import { Button } from './ui/button';
-import { Search, Calendar, Phone, Download } from 'lucide-react';
+import React, { useState, useEffect } from 'react'
+import { Card } from './ui/card'
+import { Button } from './ui/button'
+import { Search, Calendar, Phone, Download } from 'lucide-react'
+import { conversationService } from '../services/conversationService'
+import { useToast } from './toast/toast'
+import { useInstitution } from '../contexts/InstitutionContext'
 
 const ConversationLogs = () => {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [selectedFilter, setSelectedFilter] = useState('all');
+  const [conversations, setConversations] = useState([])
+  const [loading, setLoading] = useState(true)
+  const { institutionId } = useInstitution()
+  const { toast } = useToast()
 
-  // Sample conversation data
-  const conversations = [
-    {
-      id: 1,
-      participant: 'Student - Rahul Sharma',
-      type: 'admission',
-      language: 'English',
-      timestamp: '2025-01-15 10:30:25',
-      duration: '3m 45s',
-      status: 'resolved',
-      intent: 'Admission Requirements',
-      satisfaction: 4.5
-    },
-    {
-      id: 2,
-      participant: 'Parent - Priya Patel',
-      type: 'scholarship',
-      language: 'Hindi',
-      timestamp: '2025-01-15 09:15:12',
-      duration: '2m 20s',
-      status: 'escalated',
-      intent: 'Scholarship Eligibility',
-      satisfaction: 3.2
-    },
-    {
-      id: 3,
-      participant: 'Student - Amit Kumar',
-      type: 'timetable',
-      language: 'English',
-      timestamp: '2025-01-15 08:45:30',
-      duration: '1m 15s',
-      status: 'resolved',
-      intent: 'Class Schedule',
-      satisfaction: 4.8
-    },
-    {
-      id: 4,
-      participant: 'Parent - Sunita Devi',
-      type: 'fees',
-      language: 'Tamil',
-      timestamp: '2025-01-14 16:20:45',
-      duration: '4m 10s',
-      status: 'pending',
-      intent: 'Fee Payment',
-      satisfaction: 4.0
+  const fetchConversations = async () => {
+    try {
+      setLoading(true)
+      const response = await conversationService.getLogs(0, 100, institutionId, selectedFilter === 'all' ? undefined : selectedFilter)
+      setConversations(response)
+    } catch (error) {
+      toast.error('Failed to fetch conversation logs')
+    } finally {
+      setLoading(false)
     }
-  ];
+  }
+
+  const handleExport = async () => {
+    try {
+      toast.info('Export feature coming soon')
+    } catch (error) {
+      toast.error('Failed to export data', { title: 'Error' })
+    }
+  }
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-64">
+        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary"></div>
+      </div>
+    )
+  }
 
   const getStatusColor = (status) => {
     switch (status) {
-      case 'resolved': return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-400';
-      case 'pending': return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-400';
-      case 'escalated': return 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-400';
-      default: return 'bg-muted text-muted-foreground';
+      case 'Resolved':
+        return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-400'
+      case 'Pending':
+        return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-400'
+      case 'Escalated':
+        return 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-400'
+      default:
+        return 'bg-muted text-muted-foreground'
     }
-  };
+  }
 
-  const filteredConversations = conversations.filter(conv => {
-    const matchesSearch = conv.participant.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         conv.intent.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesFilter = selectedFilter === 'all' || conv.status === selectedFilter;
-    return matchesSearch && matchesFilter;
-  });
+  const filteredConversations = conversations.filter((conv) => {
+    const matchesSearch = (conv.participant_name || '').toLowerCase().includes(searchTerm.toLowerCase()) || (conv.intent || '').toLowerCase().includes(searchTerm.toLowerCase())
+    const matchesFilter = selectedFilter === 'all' || conv.status === selectedFilter
+    return matchesSearch && matchesFilter
+  })
 
   return (
     <div className="max-w-7xl mx-auto p-8 space-y-6">
@@ -119,65 +107,47 @@ const ConversationLogs = () => {
           <table className="w-full">
             <thead className="bg-muted/50 border-b border-border/30">
               <tr>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                  Participant
-                </th>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                  Intent
-                </th>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                  Duration
-                </th>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                  Status
-                </th>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                  Satisfaction
-                </th>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                  Timestamp
-                </th>
+                <th className="px-6 py-4 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">Participant</th>
+                <th className="px-6 py-4 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">Intent</th>
+                <th className="px-6 py-4 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">Duration</th>
+                <th className="px-6 py-4 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">Status</th>
+                <th className="px-6 py-4 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">Satisfaction</th>
+                <th className="px-6 py-4 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">Timestamp</th>
               </tr>
             </thead>
             <tbody className="bg-card divide-y divide-border/20">
               {filteredConversations.map((conversation) => (
-                <tr key={conversation.id} className="hover:bg-muted/30 cursor-pointer transition-colors">
+                <tr key={conversation.conversation_id} className="hover:bg-muted/30 cursor-pointer transition-colors">
                   <td className="px-6 py-4">
                     <div>
-                      <div className="text-sm font-semibold text-foreground">
-                        {conversation.participant}
-                      </div>
-                      <div className="text-xs text-muted-foreground mt-1">
-                        {conversation.language}
-                      </div>
+                      <div className="text-sm font-semibold text-foreground">{conversation.participant_name || 'Unknown'}</div>
+                      <div className="text-xs text-muted-foreground mt-1">{conversation.participant_type || 'N/A'}</div>
                     </div>
                   </td>
                   <td className="px-6 py-4">
-                    <div className="text-sm font-medium text-foreground">{conversation.intent}</div>
-                    <div className="text-xs text-muted-foreground mt-1 capitalize">{conversation.type}</div>
+                    <div className="text-sm font-medium text-foreground">{conversation.intent || 'N/A'}</div>
+                    <div className="text-xs text-muted-foreground mt-1 capitalize">General</div>
                   </td>
                   <td className="px-6 py-4">
                     <div className="flex items-center space-x-2">
                       <Phone className="w-4 h-4 text-primary" />
-                      <span className="text-sm font-medium text-foreground">{conversation.duration}</span>
+                      <span className="text-sm font-medium text-foreground">{conversation.duration || 'N/A'}</span>
                     </div>
                   </td>
                   <td className="px-6 py-4">
-                    <span className={`inline-flex px-3 py-1 text-xs font-semibold rounded-full ${getStatusColor(conversation.status)}`}>
-                      {conversation.status}
-                    </span>
+                    <span className={`inline-flex px-3 py-1 text-xs font-semibold rounded-full ${getStatusColor(conversation.status)}`}>{conversation.status || 'Unknown'}</span>
                   </td>
                   <td className="px-6 py-4">
                     <div className="flex items-center space-x-2">
-                      <span className="text-sm font-semibold text-foreground">{conversation.satisfaction}</span>
+                      <span className="text-sm font-semibold text-foreground">{conversation.satisfaction_score || 0}</span>
                       <div className="text-primary">
-                        {'★'.repeat(Math.floor(conversation.satisfaction))}
-                        <span className="text-muted-foreground">{'☆'.repeat(5 - Math.floor(conversation.satisfaction))}</span>
+                        {'★'.repeat(Math.floor(conversation.satisfaction_score || 0))}
+                        <span className="text-muted-foreground">{'☆'.repeat(5 - Math.floor(conversation.satisfaction_score || 0))}</span>
                       </div>
                     </div>
                   </td>
                   <td className="px-6 py-4">
-                    <span className="text-xs text-muted-foreground">{conversation.timestamp}</span>
+                    <span className="text-xs text-muted-foreground">{conversation.created_at}</span>
                   </td>
                 </tr>
               ))}
@@ -193,26 +163,20 @@ const ConversationLogs = () => {
           <div className="text-sm text-muted-foreground">Total Conversations</div>
         </Card>
         <Card className="p-6 bg-card border border-border/20 shadow-sm hover:shadow-md transition-shadow">
-          <div className="text-3xl font-bold text-green-600 mb-1">
-            {conversations.filter(c => c.status === 'resolved').length}
-          </div>
+          <div className="text-3xl font-bold text-green-600 mb-1">{conversations.filter((c) => c.status === 'resolved').length}</div>
           <div className="text-sm text-muted-foreground">Resolved</div>
         </Card>
         <Card className="p-6 bg-card border border-border/20 shadow-sm hover:shadow-md transition-shadow">
-          <div className="text-3xl font-bold text-yellow-600 mb-1">
-            {conversations.filter(c => c.status === 'pending').length}
-          </div>
+          <div className="text-3xl font-bold text-yellow-600 mb-1">{conversations.filter((c) => c.status === 'pending').length}</div>
           <div className="text-sm text-muted-foreground">Pending</div>
         </Card>
         <Card className="p-6 bg-card border border-border/20 shadow-sm hover:shadow-md transition-shadow">
-          <div className="text-3xl font-bold text-foreground mb-1">
-            {(conversations.reduce((acc, c) => acc + c.satisfaction, 0) / conversations.length).toFixed(1)}
-          </div>
+          <div className="text-3xl font-bold text-foreground mb-1">{(conversations.reduce((acc, c) => acc + c.satisfaction, 0) / conversations.length).toFixed(1)}</div>
           <div className="text-sm text-muted-foreground">Avg Satisfaction</div>
         </Card>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default ConversationLogs;
+export default ConversationLogs

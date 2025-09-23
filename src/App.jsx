@@ -11,12 +11,14 @@ import Footer from './components/Footer.jsx'
 import Login from './components/Login.jsx'
 import SignUp from './components/SignUp.jsx'
 import Dashboard from './components/Dashboard.jsx'
+import InstitutionSetup from './components/InstitutionSetup.jsx'
 import Playground from './components/playground/Playground.jsx'
 import { PlaygroundToast } from './components/toast/PlaygroundToast.jsx'
 import { ThemeProvider } from './contexts/ThemeContext.jsx'
 import { ConfigProvider } from './hooks/useConfig.jsx'
 import { ConnectionProvider, useConnection } from './hooks/useConnection.jsx'
 import { ToastProvider } from './components/toast/ToasterProvider.jsx'
+import { InstitutionProvider, useInstitution } from './contexts/InstitutionContext'
 import '@livekit/components-styles'
 
 const VoiceAssistantModal = ({ isOpen, onClose }) => {
@@ -46,24 +48,41 @@ const VoiceAssistantModal = ({ isOpen, onClose }) => {
   )
 }
 
-const App = () => {
+const AppContent = () => {
   const [currentPage, setCurrentPage] = useState('home')
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [showVoiceAssistant, setShowVoiceAssistant] = useState(false)
+  const { institutionId, setAdminId, setInstitutionId, setNeedsInstitutionSetup, clearAll } = useInstitution()
 
   const handleLogin = (credentials) => {
     setIsAuthenticated(true)
-    setCurrentPage('dashboard')
+    setAdminId(credentials.admin_id)
+
+    // Check if user has a valid institution - handle all null/undefined/empty cases
+    const hasValidInstitution = credentials.institution_id && credentials.institution_id !== 'null' && credentials.institution_id !== 'undefined' && credentials.institution_id.trim() !== ''
+
+    if (hasValidInstitution) {
+      setInstitutionId(credentials.institution_id)
+      setCurrentPage('dashboard')
+    } else {
+      setInstitutionId(null) // Explicitly set to null
+      setNeedsInstitutionSetup(true)
+      setCurrentPage('institution-setup')
+    }
   }
 
   const handleSignUp = (userData) => {
-    setIsAuthenticated(true)
+    setCurrentPage('login')
+  }
+
+  const handleInstitutionSetupComplete = (institutionData) => {
     setCurrentPage('dashboard')
   }
 
   const handleLogout = () => {
     setIsAuthenticated(false)
     setCurrentPage('home')
+    clearAll()
   }
 
   const LandingPage = () => (
@@ -82,22 +101,40 @@ const App = () => {
     </div>
   )
 
+  // Route logic - more explicit checks
+  if (isAuthenticated && institutionId && currentPage === 'dashboard') {
+    return <Dashboard onLogout={handleLogout} />
+  } else if (isAuthenticated && !institutionId && (currentPage === 'institution-setup' || currentPage === 'dashboard')) {
+    // If authenticated but no institution, always go to setup
+    return (
+      <InstitutionSetup
+        onSetupComplete={handleInstitutionSetupComplete}
+        onBackToLogin={() => {
+          setIsAuthenticated(false)
+          setCurrentPage('login')
+        }}
+      />
+    )
+  } else if (currentPage === 'login') {
+    return <Login onBackToHome={() => setCurrentPage('home')} onSwitchToSignUp={() => setCurrentPage('signup')} onLogin={handleLogin} />
+  } else if (currentPage === 'signup') {
+    return <SignUp onBackToHome={() => setCurrentPage('home')} onSwitchToLogin={() => setCurrentPage('login')} onSignUp={handleSignUp} />
+  } else {
+    return <LandingPage />
+  }
+}
+
+const App = () => {
   return (
     <ThemeProvider>
       <ToastProvider>
-        <ConfigProvider>
-          <ConnectionProvider>
-            {currentPage === 'dashboard' && isAuthenticated ? (
-              <Dashboard onLogout={handleLogout} />
-            ) : currentPage === 'login' ? (
-              <Login onBackToHome={() => setCurrentPage('home')} onSwitchToSignUp={() => setCurrentPage('signup')} onLogin={handleLogin} />
-            ) : currentPage === 'signup' ? (
-              <SignUp onBackToHome={() => setCurrentPage('home')} onSwitchToLogin={() => setCurrentPage('login')} onSignUp={handleSignUp} />
-            ) : (
-              <LandingPage />
-            )}
-          </ConnectionProvider>
-        </ConfigProvider>
+        <InstitutionProvider>
+          <ConfigProvider>
+            <ConnectionProvider>
+              <AppContent />
+            </ConnectionProvider>
+          </ConfigProvider>
+        </InstitutionProvider>
       </ToastProvider>
     </ThemeProvider>
   )

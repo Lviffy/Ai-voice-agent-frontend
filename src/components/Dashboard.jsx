@@ -1,54 +1,50 @@
-import React, { useState } from 'react';
-import { Card } from './ui/card';
-import { Button } from './ui/button';
-import { Switch } from './ui/switch';
-import { BarChart3, MessageSquare, Clock, Heart, AlertTriangle, Paperclip, Brain, Play, Users, Settings, BookOpen, HelpCircle, LogOut, Menu, X, Phone, Sun, Moon } from 'lucide-react';
-import ConversationLogs from './ConversationLogs';
-import FAQManagement from './FAQManagement';
-import UserManagement from './UserManagement';
-import TaskBoard from './TaskBoard';
-import SettingsComponent from './Settings';
-import RaiseTicket from './RaiseTicket';
-import AnalyticsDashboard from './AnalyticsDashboard';
-import Logo from './Logo';
-import { useTheme } from '../contexts/ThemeContext';
+import React, { useState } from 'react'
+import { Card } from './ui/card'
+import { Button } from './ui/button'
+import { Switch } from './ui/switch'
+import { BarChart3, MessageSquare, Clock, Heart, AlertTriangle, Paperclip, Brain, Play, Users, Settings, BookOpen, HelpCircle, LogOut, Menu, X, Phone, Sun, Moon } from 'lucide-react'
+import ConversationLogs from './ConversationLogs'
+import FAQManagement from './FAQManagement'
+import UserManagement from './UserManagement'
+import TaskBoard from './TaskBoard'
+import SettingsComponent from './Settings'
+import RaiseTicket from './RaiseTicket'
+import AnalyticsDashboard from './AnalyticsDashboard'
+import Logo from './Logo'
+import SupportTicketManagement from './SupportTicketManagement'
+import { useTheme } from '../contexts/ThemeContext'
 
 const Dashboard = ({ onLogout }) => {
-  const [activeSection, setActiveSection] = useState('analytics');
-  const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [selectedUser, setSelectedUser] = useState(null);
-  const { isDarkMode, toggleTheme } = useTheme();
+  const [activeSection, setActiveSection] = useState('analytics')
+  const [sidebarOpen, setSidebarOpen] = useState(true)
+  const [selectedUser, setSelectedUser] = useState(null)
+  const { isDarkMode, toggleTheme } = useTheme()
 
-  // Sample data matching the image
   const dashboardData = {
     messages: {
       arjunCodess: 1850,
-      unknownContact: 1452
+      unknownContact: 1452,
     },
     responseTime: {
       unknownContact: '12m',
-      arjunCodess: '41m'
+      arjunCodess: '41m',
     },
     interestLevel: {
       unknownContact: 45,
-      arjunCodess: 85
+      arjunCodess: 85,
     },
-    redFlags: [
-      'Significant imbalance in emotional investment.',
-      'History of conflict and unresolved issues.',
-      'Delayed response times from one party.'
-    ],
+    redFlags: ['Significant imbalance in emotional investment.', 'History of conflict and unresolved issues.', 'Delayed response times from one party.'],
     attachmentStyles: {
       unknownContact: { type: 'Avoidant', description: 'Difficulty with emotional intimacy and maintaining distance.', emoji: '🔶' },
-      arjunCodess: { type: 'Anxious', description: 'Seeking constant reassurance and worry about rejection.', emoji: '😟' }
+      arjunCodess: { type: 'Anxious', description: 'Seeking constant reassurance and worry about rejection.', emoji: '😟' },
     },
     topWords: [
       { word: 'h', arjun: 386, unknown: 257, you: 189 },
       { word: 'i', arjun: 360, unknown: 237, me: 184 },
       { word: 'to', arjun: 305, unknown: 230, nahi: 180 },
-      { word: 'hai', arjun: 287, unknown: 203, toh: 176 }
-    ]
-  };
+      { word: 'hai', arjun: 287, unknown: 203, toh: 176 },
+    ],
+  }
 
   const sidebarItems = [
     { id: 'analytics', icon: BarChart3, label: 'Analytics' },
@@ -56,34 +52,26 @@ const Dashboard = ({ onLogout }) => {
     { id: 'faq', icon: BookOpen, label: 'FAQ Management' },
     { id: 'users', icon: Users, label: 'User Management' },
     { id: 'settings', icon: Settings, label: 'Settings' },
-    { id: 'support', icon: HelpCircle, label: 'Raise a Ticket' }
-  ];
+    { id: 'support', icon: HelpCircle, label: 'Support Tickets' },
+  ]
 
-  const MetricCard = ({ title, children, className = "" }) => (
+  const MetricCard = ({ title, children, className = '' }) => (
     <Card className={`p-6 bg-card border border-border/20 shadow-sm hover:shadow-md transition-shadow duration-200 ${className}`}>
       <h3 className="text-sm font-medium mb-4 text-muted-foreground uppercase tracking-wide">{title}</h3>
       {children}
     </Card>
-  );
+  )
 
-  const CircularProgress = ({ percentage, color = "primary" }) => {
-    const radius = 45;
-    const circumference = 2 * Math.PI * radius;
-    const strokeDasharray = circumference;
-    const strokeDashoffset = circumference - (percentage / 100) * circumference;
-    
+  const CircularProgress = ({ percentage, color = 'primary' }) => {
+    const radius = 45
+    const circumference = 2 * Math.PI * radius
+    const strokeDasharray = circumference
+    const strokeDashoffset = circumference - (percentage / 100) * circumference
+
     return (
       <div className="relative w-32 h-32">
         <svg className="w-32 h-32 transform -rotate-90" viewBox="0 0 100 100">
-          <circle
-            cx="50"
-            cy="50"
-            r={radius}
-            stroke="currentColor"
-            strokeWidth="6"
-            fill="transparent"
-            className="text-muted"
-          />
+          <circle cx="50" cy="50" r={radius} stroke="currentColor" strokeWidth="6" fill="transparent" className="text-muted" />
           <circle
             cx="50"
             cy="50"
@@ -101,8 +89,8 @@ const Dashboard = ({ onLogout }) => {
           <span className="text-2xl font-bold text-primary">{percentage}%</span>
         </div>
       </div>
-    );
-  };
+    )
+  }
 
   const renderAnalyticsContent = () => (
     <div className="space-y-6">
@@ -117,9 +105,7 @@ const Dashboard = ({ onLogout }) => {
           <Button variant="outline" className="border-border">
             Back
           </Button>
-          <Button className="bg-primary text-primary-foreground hover:bg-primary/80">
-            Copy Link
-          </Button>
+          <Button className="bg-primary text-primary-foreground hover:bg-primary/80">Copy Link</Button>
         </div>
       </div>
 
@@ -255,44 +241,45 @@ const Dashboard = ({ onLogout }) => {
         </MetricCard>
       </div>
     </div>
-  );
+  )
 
   const handleOpenKanban = (user) => {
-    setSelectedUser(user);
-    setActiveSection('kanban');
-  };
+    setSelectedUser(user)
+    setActiveSection('kanban')
+  }
 
   const handleBackFromKanban = () => {
-    setSelectedUser(null);
-    setActiveSection('users');
-  };
+    setSelectedUser(null)
+    setActiveSection('users')
+  }
 
   const renderSectionContent = () => {
     switch (activeSection) {
       case 'analytics':
-        return <AnalyticsDashboard />;
+        return <AnalyticsDashboard />
       case 'conversations':
-        return <ConversationLogs />;
+        return <ConversationLogs />
       case 'faq':
-        return <FAQManagement />;
+        return <FAQManagement />
       case 'users':
-        return <UserManagement onOpenKanban={handleOpenKanban} />;
+        return <UserManagement onOpenKanban={handleOpenKanban} />
       case 'kanban':
-        return <TaskBoard userId={selectedUser?.id?.toString()} onBack={handleBackFromKanban} />;
+        return <TaskBoard userId={selectedUser?.id?.toString()} onBack={handleBackFromKanban} />
       case 'settings':
-        return <SettingsComponent />;
+        return <SettingsComponent />
       case 'support':
-        return <RaiseTicket />;
+        return <SupportTicketManagement />
+
       default:
-        return <AnalyticsDashboard />;
+        return <AnalyticsDashboard />
     }
-  };
+  }
 
   return (
     <div className="min-h-screen bg-background text-foreground flex relative overflow-hidden">
       {/* Cosmic particle effect (background dots) */}
       <div className="absolute top-0 left-0 w-full h-full cosmic-grid opacity-20 z-0"></div>
-      
+
       {/* Gradient glow effect */}
       <div className="absolute top-1/3 right-1/4 w-[400px] h-[400px] rounded-full">
         <div className="w-full h-full opacity-5 bg-primary blur-[100px]"></div>
@@ -311,20 +298,15 @@ const Dashboard = ({ onLogout }) => {
               </div>
             )}
           </div>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => setSidebarOpen(!sidebarOpen)}
-            className="absolute -right-3 top-6 bg-card border border-border rounded-full w-6 h-6 p-0"
-          >
+          <Button variant="ghost" size="sm" onClick={() => setSidebarOpen(!sidebarOpen)} className="absolute -right-3 top-6 bg-card border border-border rounded-full w-6 h-6 p-0">
             {sidebarOpen ? <X className="w-3 h-3" /> : <Menu className="w-3 h-3" />}
           </Button>
         </div>
-        
+
         {/* Navigation */}
         <nav className="mt-6">
           {sidebarItems.map((item) => {
-            const Icon = item.icon;
+            const Icon = item.icon
             return (
               <button
                 key={item.id}
@@ -336,17 +318,13 @@ const Dashboard = ({ onLogout }) => {
                 <Icon className="w-5 h-5 flex-shrink-0" />
                 {sidebarOpen && <span>{item.label}</span>}
               </button>
-            );
+            )
           })}
         </nav>
 
         {/* Footer */}
         <div className="absolute bottom-0 w-full p-6 border-t border-border">
-          <Button 
-            variant="ghost"
-            onClick={onLogout}
-            className={`w-full ${sidebarOpen ? 'justify-start' : 'justify-center'} text-muted-foreground hover:text-foreground hover:bg-muted`}
-          >
+          <Button variant="ghost" onClick={onLogout} className={`w-full ${sidebarOpen ? 'justify-start' : 'justify-center'} text-muted-foreground hover:text-foreground hover:bg-muted`}>
             <LogOut className="w-5 h-5" />
             {sidebarOpen && <span className="ml-3">Logout</span>}
           </Button>
@@ -360,19 +338,13 @@ const Dashboard = ({ onLogout }) => {
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
               <h1 className="text-xl font-semibold text-foreground capitalize">
-                {activeSection === 'faq' ? 'FAQ Management' : 
-                 activeSection === 'kanban' ? `Task Board - ${selectedUser?.name}` : 
-                 activeSection}
+                {activeSection === 'faq' ? 'FAQ Management' : activeSection === 'kanban' ? `Task Board - ${selectedUser?.name}` : activeSection}
               </h1>
             </div>
             <div className="flex items-center space-x-3">
               <div className="flex items-center gap-2 rounded-full px-3 py-2 bg-card border border-border">
                 <Moon size={16} className={`${isDarkMode ? 'text-primary' : 'text-muted-foreground'}`} />
-                <Switch
-                  checked={!isDarkMode}
-                  onCheckedChange={toggleTheme}
-                  className="data-[state=checked]:bg-primary"
-                />
+                <Switch checked={!isDarkMode} onCheckedChange={toggleTheme} className="data-[state=checked]:bg-primary" />
                 <Sun size={16} className={`${!isDarkMode ? 'text-primary' : 'text-muted-foreground'}`} />
               </div>
               <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center">
@@ -383,12 +355,10 @@ const Dashboard = ({ onLogout }) => {
         </div>
 
         {/* Content Area */}
-        <div className={activeSection === 'kanban' || activeSection === 'settings' || activeSection === 'support' ? '' : 'p-8'}>
-          {renderSectionContent()}
-        </div>
+        <div className={activeSection === 'kanban' || activeSection === 'settings' || activeSection === 'support' ? '' : 'p-8'}>{renderSectionContent()}</div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Dashboard;
+export default Dashboard

@@ -1,149 +1,100 @@
-import React, { useState } from 'react';
-import { Card } from './ui/card';
-import { Button } from './ui/button';
-import { Search, UserPlus, Edit, Trash2, Phone, Mail, Calendar, Shield, MoreVertical, Users, ListTodo } from 'lucide-react';
+import React, { useState, useEffect } from 'react'
+import { Card } from './ui/card'
+import { Button } from './ui/button'
+import { Search, UserPlus, Edit, Trash2, Phone, Mail, Calendar, Shield, MoreVertical, Users } from 'lucide-react'
+import { userRoleService } from '../services/userRoleService'
+import { useToast } from './toast/toast'
+import { useInstitution } from '../contexts/InstitutionContext'
 
 const UserManagement = ({ onOpenKanban }) => {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [selectedRole, setSelectedRole] = useState('all');
-  const [isAddingUser, setIsAddingUser] = useState(false);
-
-  // Sample users data based on conversation logs
-  const [users, setUsers] = useState([
-    {
-      id: 1,
-      name: 'Rahul Sharma',
-      email: 'rahul.sharma@email.com',
-      phone: '+91 98765 43210',
-      role: 'student',
-      status: 'active',
-      lastCall: '2025-01-15 10:30:25',
-      totalCalls: 12,
-      avgSatisfaction: 4.5,
-      preferredLanguage: 'English',
-      joinedDate: '2024-08-15',
-      notes: 'Frequently asks about admission requirements'
-    },
-    {
-      id: 2,
-      name: 'Priya Patel',
-      email: 'priya.patel@email.com',
-      phone: '+91 87654 32109',
-      role: 'parent',
-      status: 'active',
-      lastCall: '2025-01-15 09:15:12',
-      totalCalls: 8,
-      avgSatisfaction: 3.2,
-      preferredLanguage: 'Hindi',
-      joinedDate: '2024-09-20',
-      notes: 'Parent of current student, interested in scholarships'
-    },
-    {
-      id: 3,
-      name: 'Amit Kumar',
-      email: 'amit.kumar@email.com',
-      phone: '+91 76543 21098',
-      role: 'student',
-      status: 'active',
-      lastCall: '2025-01-15 08:45:30',
-      totalCalls: 15,
-      avgSatisfaction: 4.8,
-      preferredLanguage: 'English',
-      joinedDate: '2024-07-10',
-      notes: 'Regular user, asks about timetables and schedules'
-    },
-    {
-      id: 4,
-      name: 'Sunita Devi',
-      email: 'sunita.devi@email.com',
-      phone: '+91 65432 10987',
-      role: 'parent',
-      status: 'pending',
-      lastCall: '2025-01-14 16:20:45',
-      totalCalls: 3,
-      avgSatisfaction: 4.0,
-      preferredLanguage: 'Tamil',
-      joinedDate: '2025-01-10',
-      notes: 'New user, needs assistance with fee payment procedures'
-    },
-    {
-      id: 5,
-      name: 'Arjun Singh',
-      email: 'arjun.singh@email.com',
-      phone: '+91 54321 09876',
-      role: 'student',
-      status: 'inactive',
-      lastCall: '2024-12-20 14:30:00',
-      totalCalls: 25,
-      avgSatisfaction: 4.2,
-      preferredLanguage: 'English',
-      joinedDate: '2024-06-01',
-      notes: 'Graduated student, account inactive'
-    }
-  ]);
+  const [users, setUsers] = useState([])
+  const [loading, setLoading] = useState(true)
+  const { institutionId } = useInstitution()
+  const { toast } = useToast()
 
   const roles = [
     { value: 'all', label: 'All Roles' },
     { value: 'student', label: 'Students' },
     { value: 'parent', label: 'Parents' },
-    { value: 'admin', label: 'Admins' }
-  ];
+    { value: 'admin', label: 'Admins' },
+  ]
 
   const [newUser, setNewUser] = useState({
-    name: '',
+    username: '',
     email: '',
-    phone: '',
-    role: 'student',
-    preferredLanguage: 'English'
-  });
+    phone_number: '',
+    role_name: 'student',
+    institution_id: '1',
+  })
 
-  const filteredUsers = users.filter(user => {
-    const matchesSearch = user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         user.phone.includes(searchTerm);
-    const matchesRole = selectedRole === 'all' || user.role === selectedRole;
-    return matchesSearch && matchesRole;
-  });
+  useEffect(() => {
+    fetchUsers()
+  }, [])
+
+  const fetchUsers = async () => {
+    try {
+      setLoading(true)
+      const response = await userRoleService.getUsersByInstitution(institutionId)
+      setUsers(response)
+    } catch (error) {
+      toast.error('Failed to fetch users')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const filteredUsers = users.filter((user) => {
+    const matchesSearch = user.name.toLowerCase().includes(searchTerm.toLowerCase()) || user.email.toLowerCase().includes(searchTerm.toLowerCase()) || user.phone.includes(searchTerm)
+    const matchesRole = selectedRole === 'all' || user.role === selectedRole
+    return matchesSearch && matchesRole
+  })
+
+  // Update field references in JSX to match API response
 
   const getStatusColor = (status) => {
     switch (status) {
-      case 'active': return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-400';
-      case 'pending': return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-400';
-      case 'inactive': return 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-400';
-      default: return 'bg-muted text-muted-foreground';
+      case 'active':
+        return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-400'
+      case 'pending':
+        return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-400'
+      case 'inactive':
+        return 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-400'
+      default:
+        return 'bg-muted text-muted-foreground'
     }
-  };
+  }
 
   const getRoleColor = (role) => {
     switch (role) {
-      case 'student': return 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-400';
-      case 'parent': return 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-400';
-      case 'admin': return 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-400';
-      default: return 'bg-muted text-muted-foreground';
+      case 'student':
+        return 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-400'
+      case 'parent':
+        return 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-400'
+      case 'admin':
+        return 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-400'
+      default:
+        return 'bg-muted text-muted-foreground'
     }
-  };
+  }
 
-  const handleAddUser = () => {
-    if (newUser.name && newUser.email && newUser.phone) {
-      const newId = Math.max(...users.map(u => u.id)) + 1;
-      setUsers([...users, {
+  const handleAddUser = async () => {
+    try {
+      const response = await userRoleService.createUser({
         ...newUser,
-        id: newId,
-        status: 'pending',
-        lastCall: 'Never',
-        totalCalls: 0,
-        avgSatisfaction: 0,
-        joinedDate: new Date().toISOString().split('T')[0],
-        notes: 'New user'
-      }]);
-      setNewUser({ name: '', email: '', phone: '', role: 'student', preferredLanguage: 'English' });
-      setIsAddingUser(false);
+        institution_id: institutionId,
+      })
+      setUsers([...users, response])
+      setNewUser({ username: '', email: '', phone_number: '', role_name: 'student' })
+      setIsAddingUser(false)
+      toast.success('User added successfully')
+    } catch (error) {
+      toast.error('Failed to add user')
     }
-  };
+  }
 
   const handleDeleteUser = (id) => {
-    setUsers(users.filter(user => user.id !== id));
-  };
+    setUsers(users.filter((user) => user.id !== id))
+  }
 
   return (
     <div className="max-w-7xl mx-auto p-8 space-y-6">
@@ -152,10 +103,7 @@ const UserManagement = ({ onOpenKanban }) => {
           <h2 className="text-2xl font-bold text-foreground">User Management</h2>
           <p className="text-muted-foreground">Manage students, parents, and administrators</p>
         </div>
-        <Button 
-          onClick={() => setIsAddingUser(true)}
-          className="bg-primary text-primary-foreground hover:bg-primary/80"
-        >
+        <Button onClick={() => setIsAddingUser(true)} className="bg-primary text-primary-foreground hover:bg-primary/80">
           <UserPlus className="w-4 h-4 mr-2" />
           Add New User
         </Button>
@@ -179,8 +127,10 @@ const UserManagement = ({ onOpenKanban }) => {
             onChange={(e) => setSelectedRole(e.target.value)}
             className="px-4 py-3 bg-background border border-border/30 rounded-lg focus:ring-2 focus:ring-primary/20 text-foreground min-w-[140px]"
           >
-            {roles.map(role => (
-              <option key={role.value} value={role.value}>{role.label}</option>
+            {roles.map((role) => (
+              <option key={role.value} value={role.value}>
+                {role.label}
+              </option>
             ))}
           </select>
         </div>
@@ -196,7 +146,7 @@ const UserManagement = ({ onOpenKanban }) => {
               <input
                 type="text"
                 value={newUser.name}
-                onChange={(e) => setNewUser({...newUser, name: e.target.value})}
+                onChange={(e) => setNewUser({ ...newUser, name: e.target.value })}
                 className="w-full px-3 py-2 bg-background border border-border/30 rounded-lg focus:ring-2 focus:ring-primary/20 text-foreground"
                 placeholder="Enter full name"
               />
@@ -206,7 +156,7 @@ const UserManagement = ({ onOpenKanban }) => {
               <input
                 type="email"
                 value={newUser.email}
-                onChange={(e) => setNewUser({...newUser, email: e.target.value})}
+                onChange={(e) => setNewUser({ ...newUser, email: e.target.value })}
                 className="w-full px-3 py-2 bg-background border border-border/30 rounded-lg focus:ring-2 focus:ring-primary/20 text-foreground"
                 placeholder="Enter email address"
               />
@@ -216,7 +166,7 @@ const UserManagement = ({ onOpenKanban }) => {
               <input
                 type="tel"
                 value={newUser.phone}
-                onChange={(e) => setNewUser({...newUser, phone: e.target.value})}
+                onChange={(e) => setNewUser({ ...newUser, phone: e.target.value })}
                 className="w-full px-3 py-2 bg-background border border-border/30 rounded-lg focus:ring-2 focus:ring-primary/20 text-foreground"
                 placeholder="Enter phone number"
               />
@@ -225,7 +175,7 @@ const UserManagement = ({ onOpenKanban }) => {
               <label className="block text-sm font-medium text-muted-foreground mb-2">Role</label>
               <select
                 value={newUser.role}
-                onChange={(e) => setNewUser({...newUser, role: e.target.value})}
+                onChange={(e) => setNewUser({ ...newUser, role: e.target.value })}
                 className="w-full px-3 py-2 bg-background border border-border/30 rounded-lg focus:ring-2 focus:ring-primary/20 text-foreground"
               >
                 <option value="student">Student</option>
@@ -237,7 +187,7 @@ const UserManagement = ({ onOpenKanban }) => {
               <label className="block text-sm font-medium text-muted-foreground mb-2">Preferred Language</label>
               <select
                 value={newUser.preferredLanguage}
-                onChange={(e) => setNewUser({...newUser, preferredLanguage: e.target.value})}
+                onChange={(e) => setNewUser({ ...newUser, preferredLanguage: e.target.value })}
                 className="w-full px-3 py-2 bg-background border border-border/30 rounded-lg focus:ring-2 focus:ring-primary/20 text-foreground"
               >
                 <option value="English">English</option>
@@ -253,11 +203,7 @@ const UserManagement = ({ onOpenKanban }) => {
             <Button onClick={handleAddUser} className="bg-primary text-primary-foreground hover:bg-primary/80">
               Add User
             </Button>
-            <Button 
-              variant="outline" 
-              onClick={() => setIsAddingUser(false)}
-              className="border-border/30"
-            >
+            <Button variant="outline" onClick={() => setIsAddingUser(false)} className="border-border/30">
               Cancel
             </Button>
           </div>
@@ -270,27 +216,13 @@ const UserManagement = ({ onOpenKanban }) => {
           <table className="w-full">
             <thead className="bg-muted/50 border-b border-border/30">
               <tr>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                  User
-                </th>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                  Contact
-                </th>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                  Role & Status
-                </th>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                  Call Stats
-                </th>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                  Language
-                </th>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                  Last Activity
-                </th>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                  Actions
-                </th>
+                <th className="px-6 py-4 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">User</th>
+                <th className="px-6 py-4 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">Contact</th>
+                <th className="px-6 py-4 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">Role & Status</th>
+                <th className="px-6 py-4 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">Call Stats</th>
+                <th className="px-6 py-4 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">Language</th>
+                <th className="px-6 py-4 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">Last Activity</th>
+                <th className="px-6 py-4 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">Actions</th>
               </tr>
             </thead>
             <tbody className="bg-card divide-y divide-border/20">
@@ -300,7 +232,10 @@ const UserManagement = ({ onOpenKanban }) => {
                     <div className="flex items-center space-x-3">
                       <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
                         <span className="text-sm font-semibold text-primary">
-                          {user.name.split(' ').map(n => n[0]).join('')}
+                          {user.name
+                            .split(' ')
+                            .map((n) => n[0])
+                            .join('')}
                         </span>
                       </div>
                       <div>
@@ -323,21 +258,15 @@ const UserManagement = ({ onOpenKanban }) => {
                   </td>
                   <td className="px-6 py-4">
                     <div className="space-y-2">
-                      <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getRoleColor(user.role)}`}>
-                        {user.role}
-                      </span>
+                      <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getRoleColor(user.role)}`}>{user.role}</span>
                       <br />
-                      <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getStatusColor(user.status)}`}>
-                        {user.status}
-                      </span>
+                      <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getStatusColor(user.status)}`}>{user.status}</span>
                     </div>
                   </td>
                   <td className="px-6 py-4">
                     <div className="text-sm">
                       <div className="font-semibold text-foreground">{user.totalCalls} calls</div>
-                      <div className="text-muted-foreground">
-                        {user.avgSatisfaction > 0 ? `${user.avgSatisfaction}★ avg` : 'No ratings'}
-                      </div>
+                      <div className="text-muted-foreground">{user.avgSatisfaction > 0 ? `${user.avgSatisfaction}★ avg` : 'No ratings'}</div>
                     </div>
                   </td>
                   <td className="px-6 py-4">
@@ -346,31 +275,15 @@ const UserManagement = ({ onOpenKanban }) => {
                   <td className="px-6 py-4">
                     <div className="text-sm">
                       <div className="text-foreground">{user.lastCall}</div>
-                      <div className="text-xs text-muted-foreground">
-                        Joined: {user.joinedDate}
-                      </div>
+                      <div className="text-xs text-muted-foreground">Joined: {user.joinedDate}</div>
                     </div>
                   </td>
                   <td className="px-6 py-4">
                     <div className="flex items-center space-x-2">
-                      <Button 
-                        variant="ghost" 
-                        size="sm" 
-                        className="p-2"
-                        onClick={() => onOpenKanban && onOpenKanban(user)}
-                        title="View Tasks"
-                      >
-                        <ListTodo className="w-4 h-4" />
-                      </Button>
                       <Button variant="ghost" size="sm" className="p-2">
                         <Edit className="w-4 h-4" />
                       </Button>
-                      <Button 
-                        variant="ghost" 
-                        size="sm" 
-                        className="p-2 text-destructive hover:text-destructive"
-                        onClick={() => handleDeleteUser(user.id)}
-                      >
+                      <Button variant="ghost" size="sm" className="p-2 text-destructive hover:text-destructive" onClick={() => handleDeleteUser(user.id)}>
                         <Trash2 className="w-4 h-4" />
                       </Button>
                       <Button variant="ghost" size="sm" className="p-2">
@@ -400,9 +313,7 @@ const UserManagement = ({ onOpenKanban }) => {
           <div className="flex items-center space-x-3">
             <Shield className="w-8 h-8 text-green-600" />
             <div>
-              <div className="text-2xl font-bold text-green-600">
-                {users.filter(u => u.status === 'active').length}
-              </div>
+              <div className="text-2xl font-bold text-green-600">{users.filter((u) => u.status === 'active').length}</div>
               <div className="text-sm text-muted-foreground">Active Users</div>
             </div>
           </div>
@@ -411,9 +322,7 @@ const UserManagement = ({ onOpenKanban }) => {
           <div className="flex items-center space-x-3">
             <Calendar className="w-8 h-8 text-blue-600" />
             <div>
-              <div className="text-2xl font-bold text-blue-600">
-                {users.filter(u => u.role === 'student').length}
-              </div>
+              <div className="text-2xl font-bold text-blue-600">{users.filter((u) => u.role === 'student').length}</div>
               <div className="text-sm text-muted-foreground">Students</div>
             </div>
           </div>
@@ -422,16 +331,14 @@ const UserManagement = ({ onOpenKanban }) => {
           <div className="flex items-center space-x-3">
             <Phone className="w-8 h-8 text-purple-600" />
             <div>
-              <div className="text-2xl font-bold text-purple-600">
-                {users.reduce((sum, u) => sum + u.totalCalls, 0)}
-              </div>
+              <div className="text-2xl font-bold text-purple-600">{users.reduce((sum, u) => sum + u.totalCalls, 0)}</div>
               <div className="text-sm text-muted-foreground">Total Calls</div>
             </div>
           </div>
         </Card>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default UserManagement;
+export default UserManagement
