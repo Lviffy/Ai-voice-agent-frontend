@@ -5,10 +5,9 @@ import { Switch } from './ui/switch'
 import { BarChart3, MessageSquare, Clock, Heart, AlertTriangle, Paperclip, Brain, Play, Users, Settings, BookOpen, HelpCircle, LogOut, Menu, X, Phone, Sun, Moon } from 'lucide-react'
 import ConversationLogs from './ConversationLogs'
 import FAQManagement from './FAQManagement'
-import UserManagement from './UserManagement'
+import ContactManagement from './ContactManagement'
 import TaskBoard from './TaskBoard'
 import SettingsComponent from './Settings'
-import RaiseTicket from './RaiseTicket'
 import AnalyticsDashboard from './AnalyticsDashboard'
 import Logo from './Logo'
 import SupportTicketManagement from './SupportTicketManagement'
@@ -20,37 +19,11 @@ const Dashboard = ({ onLogout }) => {
   const [selectedUser, setSelectedUser] = useState(null)
   const { isDarkMode, toggleTheme } = useTheme()
 
-  const dashboardData = {
-    messages: {
-      arjunCodess: 1850,
-      unknownContact: 1452,
-    },
-    responseTime: {
-      unknownContact: '12m',
-      arjunCodess: '41m',
-    },
-    interestLevel: {
-      unknownContact: 45,
-      arjunCodess: 85,
-    },
-    redFlags: ['Significant imbalance in emotional investment.', 'History of conflict and unresolved issues.', 'Delayed response times from one party.'],
-    attachmentStyles: {
-      unknownContact: { type: 'Avoidant', description: 'Difficulty with emotional intimacy and maintaining distance.', emoji: '🔶' },
-      arjunCodess: { type: 'Anxious', description: 'Seeking constant reassurance and worry about rejection.', emoji: '😟' },
-    },
-    topWords: [
-      { word: 'h', arjun: 386, unknown: 257, you: 189 },
-      { word: 'i', arjun: 360, unknown: 237, me: 184 },
-      { word: 'to', arjun: 305, unknown: 230, nahi: 180 },
-      { word: 'hai', arjun: 287, unknown: 203, toh: 176 },
-    ],
-  }
-
   const sidebarItems = [
     { id: 'analytics', icon: BarChart3, label: 'Analytics' },
     { id: 'conversations', icon: MessageSquare, label: 'Conversation Logs' },
     { id: 'faq', icon: BookOpen, label: 'FAQ Management' },
-    { id: 'users', icon: Users, label: 'User Management' },
+    { id: 'contacts', icon: Users, label: 'Contact Management' },
     { id: 'settings', icon: Settings, label: 'Settings' },
     { id: 'support', icon: HelpCircle, label: 'Support Tickets' },
   ]
@@ -243,16 +216,6 @@ const Dashboard = ({ onLogout }) => {
     </div>
   )
 
-  const handleOpenKanban = (user) => {
-    setSelectedUser(user)
-    setActiveSection('kanban')
-  }
-
-  const handleBackFromKanban = () => {
-    setSelectedUser(null)
-    setActiveSection('users')
-  }
-
   const renderSectionContent = () => {
     switch (activeSection) {
       case 'analytics':
@@ -261,15 +224,12 @@ const Dashboard = ({ onLogout }) => {
         return <ConversationLogs />
       case 'faq':
         return <FAQManagement />
-      case 'users':
-        return <UserManagement onOpenKanban={handleOpenKanban} />
-      case 'kanban':
-        return <TaskBoard userId={selectedUser?.id?.toString()} onBack={handleBackFromKanban} />
+      case 'contacts': // Changed from 'users'
+        return <ContactManagement />
       case 'settings':
         return <SettingsComponent />
       case 'support':
         return <SupportTicketManagement />
-
       default:
         return <AnalyticsDashboard />
     }
@@ -337,9 +297,7 @@ const Dashboard = ({ onLogout }) => {
         <div className="bg-card border-b border-border p-4 sticky top-0 z-20">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
-              <h1 className="text-xl font-semibold text-foreground capitalize">
-                {activeSection === 'faq' ? 'FAQ Management' : activeSection === 'kanban' ? `Task Board - ${selectedUser?.name}` : activeSection}
-              </h1>
+              <h1 className="text-xl font-semibold text-foreground capitalize">{activeSection === 'faq' ? 'FAQ Management' : activeSection === 'contacts' ? 'Contact Management' : activeSection}</h1>
             </div>
             <div className="flex items-center space-x-3">
               <div className="flex items-center gap-2 rounded-full px-3 py-2 bg-card border border-border">

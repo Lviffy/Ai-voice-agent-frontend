@@ -1,17 +1,17 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { useForm } from 'react-hook-form'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Eye, EyeOff, Mail, Lock, Loader2, ArrowLeft } from 'lucide-react'
 import { adminService } from '../services/adminService'
-import { Label } from '@/components/ui/label'
 import { useToast } from './toast/toast'
 
 const Login = ({ onBackToHome, onSwitchToSignUp, onLogin }) => {
-  const [showPassword, setShowPassword] = useState(false)
-  const [isLoading, setIsLoading] = useState(false)
+  const [showPassword, setShowPassword] = React.useState(false)
+  const [isLoading, setIsLoading] = React.useState(false)
   const { toast } = useToast()
 
   const form = useForm({
@@ -27,7 +27,6 @@ const Login = ({ onBackToHome, onSwitchToSignUp, onLogin }) => {
       const response = await adminService.authenticateAdmin(data.email, data.password)
       toast.success('Login successful!', { title: 'Welcome back' })
 
-      // Pass the complete response to handle institution check
       onLogin({
         admin_id: response.admin_id,
         institution_id: response.institution_id,
@@ -36,7 +35,6 @@ const Login = ({ onBackToHome, onSwitchToSignUp, onLogin }) => {
         email: response.email,
       })
     } catch (error) {
-      // Handle network errors specifically
       if (error.message === 'Network error: Failed to fetch' || error.status === 0) {
         toast.error('Unable to connect to server. Please check if the backend is running on port 8000.', {
           title: 'Connection Error',

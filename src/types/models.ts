@@ -355,8 +355,24 @@ export interface UserRoleUpdate {
 
 
 
+export interface PaginationParams {
+  skip?: number;
+  limit?: number;
+}
+
+export interface AdminAuthRequest {
+  email: string;
+  password: string;
+}
+
+// Update ApiResponse to be more specific
 export interface ApiResponse<T = any> {
   message?: string;
   data?: T;
   error?: string;
+  admin_id?: string;
+  institution_id?: string;
+  first_name?: string;
+  last_name?: string;
+  email?: string;
 }

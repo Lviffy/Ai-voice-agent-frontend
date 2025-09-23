@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import { Card } from './ui/card'
 import { Button } from './ui/button'
-import { Filter, RefreshCw } from 'lucide-react'
+import { Filter, RefreshCw, Plus } from 'lucide-react'
 import TaskBoard from './TaskBoard'
 import { supportTicketService } from '../services/supportTicketService'
 import { useToast } from './toast/toast'
+import { useInstitution } from '../contexts/InstitutionContext'
 
 const SupportTicketManagement = () => {
   const [tickets, setTickets] = useState([])
@@ -13,7 +14,23 @@ const SupportTicketManagement = () => {
   const { toast } = useToast()
   const { institutionId } = useInstitution()
 
-  // Map support ticket status to kanban status
+  // Convert support tickets to kanban task format
+  const convertTicketsToTasks = (tickets) => {
+    return tickets.map((ticket) => ({
+      id: ticket.ticket_id,
+      title: ticket.subject || 'No Subject',
+      description: `Priority: ${ticket.priority || 'Medium'}\nCategory: ${ticket.category || 'General'}\nContact: ${ticket.contact_email}`,
+      status: mapTicketStatusToKanban(ticket.status),
+      priority: ticket.priority?.toLowerCase() || 'medium',
+      category: ticket.category || 'General',
+      assignee: ticket.contact_email,
+      due_date: null,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+      originalTicket: ticket,
+    }))
+  }
+
   const mapTicketStatusToKanban = (status) => {
     switch (status) {
       case 'Open':
@@ -30,7 +47,6 @@ const SupportTicketManagement = () => {
     }
   }
 
-  // Map kanban status back to ticket status
   const mapKanbanStatusToTicket = (kanbanStatus) => {
     switch (kanbanStatus) {
       case 'todo':
@@ -46,88 +62,70 @@ const SupportTicketManagement = () => {
     }
   }
 
-  // Convert support tickets to kanban task format
-  const convertTicketsToTasks = (tickets) => {
-    return tickets.map((ticket) => ({
-      id: ticket.ticket_id,
-      title: ticket.subject || 'No Subject',
-      description: `Category: ${ticket.category || 'General'}\nContact: ${ticket.contact_email}`,
-      status: mapTicketStatusToKanban(ticket.status),
-      priority: ticket.priority?.toLowerCase() || 'medium',
-      category: ticket.category,
-      assignee: ticket.contact_email,
-      due_date: null, // Support tickets might not have due dates
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
-      user_id: ticket.ticket_id,
-      // Store original ticket data
-      originalTicket: ticket,
-    }))
-  }
-
   const fetchTickets = async () => {
     try {
       setLoading(true)
+      if (!institutionId) {
+        toast.error('Institution ID not found')
+        return
+      }
+
       let response
       if (priorityFilter === 'all') {
         response = await supportTicketService.getTicketsByInstitution(institutionId)
       } else {
         response = await supportTicketService.getTicketsByPriority(priorityFilter.charAt(0).toUpperCase() + priorityFilter.slice(1), institutionId)
       }
-      setTickets(response)
+      console.log('Fetched tickets:', response)
+      setTickets(response || [])
     } catch (error) {
+      console.error('Error fetching support tickets:', error)
       toast.error('Failed to fetch support tickets')
+      setTickets([])
     } finally {
       setLoading(false)
     }
   }
 
   useEffect(() => {
-    fetchTickets()
-  }, [priorityFilter])
+    if (institutionId) {
+      fetchTickets()
+    }
+  }, [priorityFilter, institutionId])
 
   const handleStatusUpdate = async (taskId, newKanbanStatus) => {
     try {
       const newTicketStatus = mapKanbanStatusToTicket(newKanbanStatus)
-      await supportTicketService.updateTicket(taskId, { status: newTicketStatus })
+      console.log(`Updating ticket ${taskId} from kanban status ${newKanbanStatus} to ticket status ${newTicketStatus}`)
+
+      const updateData = { status: newTicketStatus }
+      const updatedTicket = await supportTicketService.updateTicket(taskId, updateData)
+
+      console.log('Updated ticket:', updatedTicket)
 
       // Update local state
       setTickets((prevTickets) => prevTickets.map((ticket) => (ticket.ticket_id === taskId ? { ...ticket, status: newTicketStatus } : ticket)))
 
       toast.success(`Ticket status updated to ${newTicketStatus}`)
     } catch (error) {
-      toast.error('Failed to update ticket status', { title: 'Error' })
+      console.error('Error updating ticket status:', error)
+      toast.error('Failed to update ticket status')
     }
   }
 
-  // Custom hook for TaskBoard that uses support ticket data
+  // Create useTicketBoard hook for TaskBoard
   const useTicketBoard = () => {
     const tasks = convertTicketsToTasks(tickets)
 
     const columns = [
-      {
-        id: 'todo',
-        title: 'Open',
-        tasks: tasks.filter((task) => task.status === 'todo'),
-      },
-      {
-        id: 'in-progress',
-        title: 'In Progress',
-        tasks: tasks.filter((task) => task.status === 'in-progress'),
-      },
-      {
-        id: 'in-review',
-        title: 'Under Review',
-        tasks: tasks.filter((task) => task.status === 'in-review'),
-      },
-      {
-        id: 'completed',
-        title: 'Resolved',
-        tasks: tasks.filter((task) => task.status === 'completed'),
-      },
+      { id: 'todo', title: 'Open', tasks: tasks.filter((task) => task.status === 'todo') },
+      { id: 'in-progress', title: 'In Progress', tasks: tasks.filter((task) => task.status === 'in-progress') },
+      { id: 'in-review', title: 'Under Review', tasks: tasks.filter((task) => task.status === 'in-review') },
+      { id: 'completed', title: 'Resolved', tasks: tasks.filter((task) => task.status === 'completed') },
     ]
 
     const handleTaskDragStart = (e, task) => {
+      console.log('Task drag start:', task.title, task.id)
       e.dataTransfer.effectAllowed = 'move'
       e.dataTransfer.setData('text/plain', task.id)
     }
@@ -148,6 +146,7 @@ const SupportTicketManagement = () => {
     const handleDrop = (e, columnId) => {
       e.preventDefault()
       const taskId = e.dataTransfer.getData('text/plain')
+      console.log('Dropped task:', taskId, 'in column:', columnId)
       handleStatusUpdate(taskId, columnId)
     }
 
@@ -171,11 +170,11 @@ const SupportTicketManagement = () => {
   const ticketBoardData = useTicketBoard()
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 p-8">
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-2xl font-bold text-foreground">Support Tickets</h2>
-          <p className="text-muted-foreground">Manage and track support tickets</p>
+          <p className="text-muted-foreground">Manage and track all support tickets</p>
         </div>
         <div className="flex items-center space-x-3">
           <Button variant="outline" onClick={fetchTickets} disabled={loading}>
@@ -204,7 +203,7 @@ const SupportTicketManagement = () => {
         </div>
       </Card>
 
-      {/* Kanban Board */}
+      {/* Kanban Board for Tickets */}
       <div className="bg-card rounded-lg border border-border p-6">
         <TaskBoard customData={ticketBoardData} className="min-h-[600px]" />
       </div>

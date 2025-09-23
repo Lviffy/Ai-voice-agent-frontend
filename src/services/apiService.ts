@@ -1,23 +1,23 @@
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
 
 export class ApiError extends Error {
-  constructor(message, status, response) {
+  constructor(
+    message: string,
+    public status: number,
+    public response?: any
+  ) {
     super(message);
     this.name = 'ApiError';
-    this.status = status;
-    this.response = response;
   }
 }
 
 class ApiService {
-  constructor(baseURL = API_BASE_URL) {
-    this.baseURL = baseURL;
-  }
+  constructor(private baseURL: string = API_BASE_URL) {}
 
-  async request(endpoint, options = {}) {
+  async request<T = any>(endpoint: string, options: RequestInit = {}): Promise<T> {
     const url = `${this.baseURL}${endpoint}`;
     
-    const config = {
+    const config: RequestInit = {
       headers: {
         'Content-Type': 'application/json',
         ...options.headers,
@@ -42,30 +42,30 @@ class ApiService {
       if (error instanceof ApiError) {
         throw error;
       }
-      throw new ApiError(`Network error: ${error.message}`, 0);
+      throw new ApiError(`Network error: ${(error as Error).message}`, 0);
     }
   }
 
-  async get(endpoint) {
-    return this.request(endpoint, { method: 'GET' });
+  async get<T = any>(endpoint: string): Promise<T> {
+    return this.request<T>(endpoint, { method: 'GET' });
   }
 
-  async post(endpoint, data) {
-    return this.request(endpoint, {
+  async post<T = any>(endpoint: string, data?: any): Promise<T> {
+    return this.request<T>(endpoint, {
       method: 'POST',
-      body: JSON.stringify(data),
+      body: data ? JSON.stringify(data) : undefined,
     });
   }
 
-  async put(endpoint, data) {
-    return this.request(endpoint, {
+  async put<T = any>(endpoint: string, data?: any): Promise<T> {
+    return this.request<T>(endpoint, {
       method: 'PUT',
-      body: JSON.stringify(data),
+      body: data ? JSON.stringify(data) : undefined,
     });
   }
 
-  async delete(endpoint) {
-    return this.request(endpoint, { method: 'DELETE' });
+  async delete<T = any>(endpoint: string): Promise<T> {
+    return this.request<T>(endpoint, { method: 'DELETE' });
   }
 }
 

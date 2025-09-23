@@ -9,20 +9,33 @@ import { useInstitution } from '../contexts/InstitutionContext'
 const ConversationLogs = () => {
   const [conversations, setConversations] = useState([])
   const [loading, setLoading] = useState(true)
+  const [searchTerm, setSearchTerm] = useState('')
+  const [selectedFilter, setSelectedFilter] = useState('all')
   const { institutionId } = useInstitution()
   const { toast } = useToast()
 
   const fetchConversations = async () => {
     try {
       setLoading(true)
-      const response = await conversationService.getLogs(0, 100, institutionId, selectedFilter === 'all' ? undefined : selectedFilter)
-      setConversations(response)
+      if (!institutionId) {
+        toast.error('Institution ID not found')
+        return
+      }
+
+      const response = await conversationService.getLogsByInstitution(institutionId)
+      setConversations(response || [])
     } catch (error) {
+      console.error('Error fetching conversations:', error)
       toast.error('Failed to fetch conversation logs')
+      setConversations([]) // Set empty array as fallback
     } finally {
       setLoading(false)
     }
   }
+
+  useEffect(() => {
+    fetchConversations()
+  }, [institutionId])
 
   const handleExport = async () => {
     try {
@@ -59,11 +72,32 @@ const ConversationLogs = () => {
     return matchesSearch && matchesFilter
   })
 
+  // Show empty state if no conversations
+  if (!loading && conversations.length === 0) {
+    return (
+      <div className="max-w-7xl mx-auto p-8">
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-2xl font-bold text-foreground">Conversation Logs</h2>
+          <Button onClick={fetchConversations} className="bg-primary text-primary-foreground hover:bg-primary/80">
+            Refresh
+          </Button>
+        </div>
+        <Card className="p-12 text-center">
+          <div className="text-muted-foreground">
+            <Phone className="w-12 h-12 mx-auto mb-4 opacity-50" />
+            <h3 className="text-lg font-semibold mb-2">No conversations yet</h3>
+            <p>Conversation logs will appear here once users start interacting with your AI agent.</p>
+          </div>
+        </Card>
+      </div>
+    )
+  }
+
   return (
     <div className="max-w-7xl mx-auto p-8 space-y-6">
       <div className="flex items-center justify-between">
         <h2 className="text-2xl font-bold text-foreground">Conversation Logs</h2>
-        <Button className="bg-primary text-primary-foreground hover:bg-primary/80">
+        <Button onClick={handleExport} className="bg-primary text-primary-foreground hover:bg-primary/80">
           <Download className="w-4 h-4 mr-2" />
           Export
         </Button>
@@ -89,9 +123,9 @@ const ConversationLogs = () => {
               className="px-4 py-3 bg-background border border-border/30 rounded-lg focus:ring-2 focus:ring-primary/20 text-foreground min-w-[140px]"
             >
               <option value="all">All Status</option>
-              <option value="resolved">Resolved</option>
-              <option value="pending">Pending</option>
-              <option value="escalated">Escalated</option>
+              <option value="Resolved">Resolved</option>
+              <option value="Pending">Pending</option>
+              <option value="Escalated">Escalated</option>
             </select>
             <Button variant="outline" className="border-border/30 hover:border-border/60">
               <Calendar className="w-4 h-4 mr-2" />
@@ -163,15 +197,17 @@ const ConversationLogs = () => {
           <div className="text-sm text-muted-foreground">Total Conversations</div>
         </Card>
         <Card className="p-6 bg-card border border-border/20 shadow-sm hover:shadow-md transition-shadow">
-          <div className="text-3xl font-bold text-green-600 mb-1">{conversations.filter((c) => c.status === 'resolved').length}</div>
+          <div className="text-3xl font-bold text-green-600 mb-1">{conversations.filter((c) => c.status === 'Resolved').length}</div>
           <div className="text-sm text-muted-foreground">Resolved</div>
         </Card>
         <Card className="p-6 bg-card border border-border/20 shadow-sm hover:shadow-md transition-shadow">
-          <div className="text-3xl font-bold text-yellow-600 mb-1">{conversations.filter((c) => c.status === 'pending').length}</div>
+          <div className="text-3xl font-bold text-yellow-600 mb-1">{conversations.filter((c) => c.status === 'Pending').length}</div>
           <div className="text-sm text-muted-foreground">Pending</div>
         </Card>
         <Card className="p-6 bg-card border border-border/20 shadow-sm hover:shadow-md transition-shadow">
-          <div className="text-3xl font-bold text-foreground mb-1">{(conversations.reduce((acc, c) => acc + c.satisfaction, 0) / conversations.length).toFixed(1)}</div>
+          <div className="text-3xl font-bold text-foreground mb-1">
+            {conversations.length > 0 ? (conversations.reduce((acc, c) => acc + (c.satisfaction_score || 0), 0) / conversations.length).toFixed(1) : '0.0'}
+          </div>
           <div className="text-sm text-muted-foreground">Avg Satisfaction</div>
         </Card>
       </div>
