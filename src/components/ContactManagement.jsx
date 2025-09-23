@@ -110,7 +110,13 @@ const ContactManagement = () => {
       toast.success('Contact deleted successfully')
     } catch (error) {
       console.error('Error deleting contact:', error)
-      toast.error('Failed to delete contact')
+      if (error.status === 404) {
+        toast.error('Contact not found')
+      } else if (error.status === 400) {
+        toast.error('Cannot delete contact: ' + error.message)
+      } else {
+        toast.error('Failed to delete contact: ' + (error.message || 'Unknown error'))
+      }
     }
   }
 
